@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { Alert } from 'react-bootstrap';
+import './Login.css';
 
 function Login() {
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
   return (
     <div className="login-container">
       <h1>Login</h1>
+      {error && <Alert variant="danger">{error}</Alert>}
       <Formik
         initialValues={{ username: '', password: '' }}
         validate={(values) => {
@@ -17,10 +25,16 @@ function Login() {
           }
           return errors;
         }}
-        onSubmit={(values, { setSubmitting }) => {
-          // заглушка отправка формы
-          console.log('Form submitted:', values);
-          setSubmitting(false);
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            const response = await axios.post('/api/v1/login', values);
+            localStorage.setItem('token', response.data.token);
+            setError(null);
+            navigate('/');
+          } catch (err) {
+            setError('Invalid username or password');
+            setSubmitting(false);
+          }
         }}
       >
         {({ isSubmitting }) => (
