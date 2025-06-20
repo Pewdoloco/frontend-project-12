@@ -1,8 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import chatReducer from './chatSlice';
+import chatReducer, { fetchChannels, fetchMessages, sendMessage, initWebSocket, setCurrentChannelId, addMessage, setNetworkStatus } from './chatSlice';
 
 export const store = configureStore({
   reducer: {
     chat: chatReducer,
   },
 });
+
+export {
+  fetchChannels,
+  fetchMessages,
+  sendMessage,
+  initWebSocket,
+  setCurrentChannelId,
+  addMessage,
+  setNetworkStatus,
+};
