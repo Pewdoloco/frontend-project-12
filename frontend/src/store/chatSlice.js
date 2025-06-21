@@ -106,7 +106,7 @@ const chatSlice = createSlice({
     currentChannelId: null,
     loading: false,
     error: null,
-    networkStatus: 'connected',
+    networkStatus: 'disconnected',
   },
   reducers: {
     setCurrentChannelId: (state, action) => {
@@ -253,6 +253,12 @@ export const initWebSocket = () => dispatch => {
   socket.on('disconnect', () => {
     dispatch(setNetworkStatus('disconnected'));
   });
+
+  if (socket.connected) {
+    dispatch(setNetworkStatus('connected'));
+  } else {
+    socket.connect();
+  }
 
   return () => {
     socket.off('connect');

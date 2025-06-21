@@ -4,15 +4,19 @@ import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
 import { Modal, Button, Form as BootstrapForm, Alert } from 'react-bootstrap';
 import { addChannel } from '../store';
+import { useTranslation } from 'react-i18next';
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
+  const { t } = useTranslation();
   return (
     <BootstrapForm.Group>
-      <BootstrapForm.Label>{label}</BootstrapForm.Label>
+      <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
-        <div className="text-danger mt-1">{meta.error}</div>
+        <div className="text-danger mt-1">
+          {meta.error === 'Required' ? t('modals.required') : meta.error}
+        </div>
       ) : null}
     </BootstrapForm.Group>
   );
@@ -21,6 +25,7 @@ const TextInput = ({ label, ...props }) => {
 function AddChannelModal({ show, onHide }) {
   const dispatch = useDispatch();
   const { channels, error, loading } = useSelector(state => state.chat);
+  const { t } = useTranslation();
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -31,19 +36,19 @@ function AddChannelModal({ show, onHide }) {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .min(3, 'Must be 3–20 characters')
-      .max(20, 'Must be 3–20 characters')
-      .notOneOf(channels.map(c => c.name), 'Channel name must be unique')
-      .required('Required'),
+      .min(3, t('modals.nameLength'))
+      .max(20, t('modals.nameLength'))
+      .notOneOf(channels.map(c => c.name), t('modals.uniqueName'))
+      .required(t('modals.required')),
   });
 
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Add Channel</Modal.Title>
+        <Modal.Title>{t('modals.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {error && <Alert variant="danger">{error}</Alert>}
+        {error && <Alert variant="danger">{t('common.error')}: {error}</Alert>}
         <Formik
           initialValues={{ name: '' }}
           validationSchema={validationSchema}
@@ -60,7 +65,7 @@ function AddChannelModal({ show, onHide }) {
           {({ isSubmitting }) => (
             <Form>
               <TextInput
-                label="Channel Name"
+                label="modals.channelName"
                 name="name"
                 type="text"
                 ref={inputRef}
@@ -68,10 +73,10 @@ function AddChannelModal({ show, onHide }) {
               />
               <Modal.Footer>
                 <Button variant="secondary" onClick={onHide} disabled={isSubmitting || loading}>
-                  Cancel
+                  {t('modals.cancel')}
                 </Button>
                 <Button type="submit" variant="primary" disabled={isSubmitting || loading}>
-                  Add
+                  {t('modals.add')}
                 </Button>
               </Modal.Footer>
             </Form>

@@ -21,21 +21,25 @@ import AddChannelModal from '../components/AddChannelModal';
 import RemoveChannelModal from '../components/RemoveChannelModal';
 import RenameChannelModal from '../components/RenameChannelModal';
 import './Home.css';
+import { useTranslation } from 'react-i18next';
 
 function Home() {
   const dispatch = useDispatch();
   const { channels, messages, currentChannelId, loading, error, networkStatus } = useSelector(
     state => state.chat
   );
+  const { t } = useTranslation();
   const [messageInput, setMessageInput] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(null);
   const [showRenameModal, setShowRenameModal] = useState(null);
+  const [isWebSocketInitialized, setIsWebSocketInitialized] = useState(false);
 
   useEffect(() => {
     dispatch(fetchChannels());
     dispatch(fetchMessages());
     const cleanup = dispatch(initWebSocket());
+    setIsWebSocketInitialized(true);
     return () => cleanup();
   }, [dispatch]);
 
@@ -61,23 +65,20 @@ function Home() {
   const filteredMessages = messages.filter(
     message => message.channelId === currentChannelId
   );
-  useEffect(() => {
-    console.log('Current channel ID changed to:', currentChannelId);
-  }, [currentChannelId]);
 
   return (
     <Container fluid className="chat-container">
-      {error && <Alert variant="danger">{error}</Alert>}
-      {networkStatus === 'disconnected' && (
-        <Alert variant="warning">Disconnected from server. Reconnecting...</Alert>
+      {error && <Alert variant="danger">{t('common.error')}: {error}</Alert>}
+      {isWebSocketInitialized && networkStatus === 'disconnected' && (
+        <Alert variant="warning">{t('common.disconnected')}</Alert>
       )}
-      {loading && <div>Loading...</div>}
+      {loading && <div>{t('common.loading')}</div>}
       <div className="chat-content">
         <Col className="channel-list">
           <div className="channel-header">
-            <h3>Каналы</h3>
+            <h3>{t('home.channels')}</h3>
             <Button variant="primary" size="sm" onClick={() => setShowAddModal(true)}>
-              +
+              {t('home.addChannel')}
             </Button>
           </div>
           <ListGroup className="mt-2">
@@ -99,13 +100,13 @@ function Home() {
                         onClick={() => setShowRenameModal(channel.id)}
                         disabled={loading}
                       >
-                        Rename
+                        {t('modals.rename')}
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => setShowRemoveModal(channel.id)}
                         disabled={loading}
                       >
-                        Remove
+                        {t('modals.remove')}
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
@@ -115,7 +116,7 @@ function Home() {
           </ListGroup>
         </Col>
         <Col className="chat-area">
-          <h3>Chat</h3>
+          <h3>{t('home.chat')}</h3>
           <div className="messages">
             {filteredMessages.map(message => (
               <div key={message.id} className="message">
@@ -128,7 +129,7 @@ function Home() {
             <Form.Group className="flex-grow-1">
               <Form.Control
                 type="text"
-                placeholder="Type a message..."
+                placeholder={t('home.typeMessage')}
                 value={messageInput}
                 onChange={e => setMessageInput(e.target.value)}
                 disabled={!currentChannelId || networkStatus !== 'connected'}
@@ -139,7 +140,7 @@ function Home() {
               type="submit"
               disabled={!currentChannelId || networkStatus !== 'connected' || loading}
             >
-              Send
+              {t('home.send')}
             </Button>
           </Form>
         </Col>

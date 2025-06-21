@@ -4,12 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap';
 import './Login.css';
+import { useTranslation } from 'react-i18next';
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
+  const { t } = useTranslation();
   return (
     <BootstrapForm.Group className="mb-3">
-      <BootstrapForm.Label>{label}</BootstrapForm.Label>
+      <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">{meta.error}</div>
@@ -20,21 +22,22 @@ const TextInput = ({ label, ...props }) => {
 
 function Login() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [error, setError] = useState(null);
 
   return (
     <div className="login-container">
-      <h1>Login</h1>
-      {error && <Alert variant="danger">{error}</Alert>}
+      <h1>{t('login.title')}</h1>
+      {error && <Alert variant="danger">{t('login.invalidCredentials')}</Alert>}
       <Formik
         initialValues={{ username: '', password: '' }}
         validate={values => {
           const errors = {};
           if (!values.username) {
-            errors.username = 'Required';
+            errors.username = t('login.invalidCredentials');
           }
           if (!values.password) {
-            errors.password = 'Required';
+            errors.password = t('login.invalidCredentials');
           }
           return errors;
         }}
@@ -46,7 +49,7 @@ function Login() {
             setError(null);
             navigate('/');
           } catch {
-            setError('Invalid username or password');
+            setError(t('login.invalidCredentials'));
             setSubmitting(false);
           }
         }}
@@ -54,17 +57,17 @@ function Login() {
         {({ isSubmitting }) => (
           <Form className="login-form">
             <TextInput
-              label="Username"
+              label="login.username"
               name="username"
               type="text"
-              placeholder="Enter username"
+              placeholder={t('login.username')}
               disabled={isSubmitting}
             />
             <TextInput
-              label="Password"
+              label="login.password"
               name="password"
               type="password"
-              placeholder="Enter password"
+              placeholder={t('login.password')}
               disabled={isSubmitting}
             />
             <Button
@@ -73,10 +76,10 @@ function Login() {
               disabled={isSubmitting}
               className="w-100"
             >
-              Login
+              {t('login.login')}
             </Button>
             <div className="text-center mt-3">
-              Don’t have an account? <Link to="/signup">Sign Up</Link>
+              {t('login.noAccount')}<Link to="/signup">{t('login.signup')}</Link>
             </div>
           </Form>
         )}

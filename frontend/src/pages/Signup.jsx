@@ -5,12 +5,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap';
 import './Signup.css';
+import { useTranslation } from 'react-i18next';
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
+  const { t } = useTranslation();
   return (
     <BootstrapForm.Group className="mb-3">
-      <BootstrapForm.Label>{label}</BootstrapForm.Label>
+      <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">{meta.error}</div>
@@ -21,24 +23,25 @@ const TextInput = ({ label, ...props }) => {
 
 function Signup() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [error, setError] = useState(null);
 
   const validationSchema = Yup.object({
     username: Yup.string()
-      .min(3, 'Must be 3–20 characters')
-      .max(20, 'Must be 3–20 characters')
-      .required('Required'),
+      .min(3, t('signup.minPasswordLength'))
+      .max(20, t('signup.minPasswordLength'))
+      .required(t('login.invalidCredentials')),
     password: Yup.string()
-      .min(6, 'Must be at least 6 characters')
-      .required('Required'),
+      .min(6, t('signup.minPasswordLength'))
+      .required(t('login.invalidCredentials')),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Required'),
+      .oneOf([Yup.ref('password'), null], t('signup.passwordMatch'))
+      .required(t('login.invalidCredentials')),
   });
 
   return (
     <div className="signup-container">
-      <h1>Sign Up</h1>
+      <h1>{t('signup.title')}</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <Formik
         initialValues={{ username: '', password: '', confirmPassword: '' }}
@@ -55,9 +58,9 @@ function Signup() {
             navigate('/');
           } catch (err) {
             if (err.response?.status === 409) {
-              setError('User already exists');
+              setError(t('signup.userExists'));
             } else {
-              setError('Registration failed. Please try again.');
+              setError(t('signup.registrationFailed'));
             }
             setSubmitting(false);
           }
@@ -66,24 +69,24 @@ function Signup() {
         {({ isSubmitting }) => (
           <Form className="signup-form">
             <TextInput
-              label="Username"
+              label="signup.username"
               name="username"
               type="text"
-              placeholder="Enter username"
+              placeholder={t('signup.username')}
               disabled={isSubmitting}
             />
             <TextInput
-              label="Password"
+              label="signup.password"
               name="password"
               type="password"
-              placeholder="Enter password"
+              placeholder={t('signup.password')}
               disabled={isSubmitting}
             />
             <TextInput
-              label="Confirm Password"
+              label="signup.confirmPassword"
               name="confirmPassword"
               type="password"
-              placeholder="Confirm password"
+              placeholder={t('signup.confirmPassword')}
               disabled={isSubmitting}
             />
             <Button
@@ -92,10 +95,10 @@ function Signup() {
               disabled={isSubmitting}
               className="w-100"
             >
-              Sign Up
+              {t('signup.signup')}
             </Button>
             <div className="text-center mt-3">
-              Already have an account? <Link to="/login">Log In</Link>
+              {t('signup.haveAccount')}<Link to="/login">{t('signup.login')}</Link>
             </div>
           </Form>
         )}

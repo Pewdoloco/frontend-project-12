@@ -2,9 +2,11 @@ import React from 'react';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import socket from '../utils/socket';
+import { useTranslation } from 'react-i18next';
 
 function Header() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const isAuthenticated = !!localStorage.getItem('token');
 
   const handleLogout = () => {
@@ -18,12 +20,12 @@ function Header() {
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-3">
       <Container>
         <Navbar.Brand as={Link} to="/" className="fs-4">
-          Hexlet Chat
+          {t('header.appName')}
         </Navbar.Brand>
         <Nav className="ms-auto">
           {isAuthenticated && (
             <Button variant="outline-light" size="sm" onClick={handleLogout}>
-              Выйти
+              {t('common.logout')}
             </Button>
           )}
         </Nav>
