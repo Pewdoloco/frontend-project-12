@@ -49,6 +49,55 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+export const addChannel = createAsyncThunk(
+  'chat/addChannel',
+  async (name, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        '/api/v1/channels',
+        { name },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to add channel');
+    }
+  }
+);
+
+export const removeChannel = createAsyncThunk(
+  'chat/removeChannel',
+  async (id, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`/api/v1/channels/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to remove channel');
+    }
+  }
+);
+
+export const renameChannel = createAsyncThunk(
+  'chat/renameChannel',
+  async ({ id, name }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.patch(
+        `/api/v1/channels/${id}`,
+        { name },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to rename channel');
+    }
+  }
+);
+
 const chatSlice = createSlice({
   name: 'chat',
   initialState: {
@@ -69,24 +118,44 @@ const chatSlice = createSlice({
     setNetworkStatus: (state, action) => {
       state.networkStatus = action.payload;
     },
+    addChannelSync: (state, action) => {
+      state.channels.push(action.payload);
+      state.currentChannelId = action.payload.id;
+    },
+    removeChannelSync: (state, action) => {
+      state.channels = state.channels.filter(channel => channel.id !== action.payload);
+      state.messages = state.messages.filter(
+        message => message.channelId !== action.payload
+      );
+      if (state.currentChannelId === action.payload) {
+        const generalChannel = state.channels.find(c => c.name === 'general');
+        state.currentChannelId = generalChannel?.id || state.channels[0]?.id || null;
+      }
+    },
+    renameChannelSync: (state, action) => {
+      const channel = state.channels.find(c => c.id === action.payload.id);
+      if (channel) {
+        channel.name = action.payload.name;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchChannels.pending, (state) => {
+      .addCase(fetchChannels.pending, state => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
         state.loading = false;
         state.channels = action.payload;
-        const generalChannel = action.payload.find((c) => c.name === 'general');
+        const generalChannel = action.payload.find(c => c.name === 'general');
         state.currentChannelId = generalChannel?.id || action.payload[0]?.id || null;
       })
       .addCase(fetchChannels.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(fetchMessages.pending, (state) => {
+      .addCase(fetchMessages.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -98,31 +167,83 @@ const chatSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(sendMessage.pending, (state) => {
+      .addCase(sendMessage.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(sendMessage.fulfilled, (state) => {
+      .addCase(sendMessage.fulfilled, state => {
         state.loading = false;
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.networkStatus = 'error';
+      })
+      .addCase(addChannel.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addChannel.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(addChannel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(removeChannel.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeChannel.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(removeChannel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(renameChannel.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(renameChannel.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(renameChannel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { setCurrentChannelId, addMessage, setNetworkStatus } = chatSlice.actions;
+export const {
+  setCurrentChannelId,
+  addMessage,
+  setNetworkStatus,
+  addChannelSync,
+  removeChannelSync,
+  renameChannelSync,
+} = chatSlice.actions;
 export default chatSlice.reducer;
 
-export const initWebSocket = () => (dispatch) => {
+export const initWebSocket = () => dispatch => {
   socket.on('connect', () => {
     dispatch(setNetworkStatus('connected'));
   });
 
-  socket.on('newMessage', (data) => {
+  socket.on('newMessage', data => {
     dispatch(addMessage(data));
+  });
+
+  socket.on('newChannel', data => {
+    dispatch(addChannelSync(data));
+  });
+
+  socket.on('removeChannel', data => {
+    dispatch(removeChannelSync(data.id));
+  });
+
+  socket.on('renameChannel', data => {
+    dispatch(renameChannelSync(data));
   });
 
   socket.on('connect_error', () => {
@@ -136,6 +257,9 @@ export const initWebSocket = () => (dispatch) => {
   return () => {
     socket.off('connect');
     socket.off('newMessage');
+    socket.off('newChannel');
+    socket.off('removeChannel');
+    socket.off('renameChannel');
     socket.off('connect_error');
     socket.off('disconnect');
   };
