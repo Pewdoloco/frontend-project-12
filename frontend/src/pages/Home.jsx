@@ -9,7 +9,6 @@ import {
 } from '../store';
 import {
   Container,
-  Row,
   Col,
   ListGroup,
   Form,
@@ -62,6 +61,9 @@ function Home() {
   const filteredMessages = messages.filter(
     message => message.channelId === currentChannelId
   );
+  useEffect(() => {
+    console.log('Current channel ID changed to:', currentChannelId);
+  }, [currentChannelId]);
 
   return (
     <Container fluid className="chat-container">
@@ -70,28 +72,25 @@ function Home() {
         <Alert variant="warning">Disconnected from server. Reconnecting...</Alert>
       )}
       {loading && <div>Loading...</div>}
-      <Row>
-        <Col md={3} className="channel-list">
-          <h3>
-            Channels{' '}
+      <div className="chat-content">
+        <Col className="channel-list">
+          <div className="channel-header">
+            <h3>Каналы</h3>
             <Button variant="primary" size="sm" onClick={() => setShowAddModal(true)}>
               +
             </Button>
-          </h3>
-          <ListGroup>
+          </div>
+          <ListGroup className="mt-2">
             {channels.map(channel => (
               <ListGroup.Item
                 key={channel.id}
                 as="div"
                 active={channel.id === currentChannelId}
                 className="d-flex justify-content-between align-items-center"
+                onClick={() => handleChannelSelect(channel.id)}
+                style={{ cursor: 'pointer' }}
               >
-                <span
-                  onClick={() => handleChannelSelect(channel.id)}
-                  style={{ cursor: 'pointer', flex: 1 }}
-                >
-                  # {channel.name}
-                </span>
+                <span># {channel.name}</span>
                 {channel.removable && (
                   <Dropdown as={ButtonGroup}>
                     <Dropdown.Toggle split variant="light" size="sm" />
@@ -115,7 +114,7 @@ function Home() {
             ))}
           </ListGroup>
         </Col>
-        <Col md={9} className="chat-area">
+        <Col className="chat-area">
           <h3>Chat</h3>
           <div className="messages">
             {filteredMessages.map(message => (
@@ -126,7 +125,7 @@ function Home() {
             ))}
           </div>
           <Form className="message-form" onSubmit={handleSubmit}>
-            <Form.Group>
+            <Form.Group className="flex-grow-1">
               <Form.Control
                 type="text"
                 placeholder="Type a message..."
@@ -139,13 +138,12 @@ function Home() {
               variant="primary"
               type="submit"
               disabled={!currentChannelId || networkStatus !== 'connected' || loading}
-              className="mt-2"
             >
               Send
             </Button>
           </Form>
         </Col>
-      </Row>
+      </div>
       <AddChannelModal show={showAddModal} onHide={() => setShowAddModal(false)} />
       {showRemoveModal && (
         <RemoveChannelModal
