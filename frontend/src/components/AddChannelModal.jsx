@@ -54,7 +54,7 @@ function AddChannelModal({ show, onHide }) {
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             try {
-              const result = await dispatch(addChannel(values.name)).unwrap();
+              await dispatch(addChannel(values.name)).unwrap();
               toast.success(t('toast.channelAdded', { name: values.name }));
               resetForm();
               onHide();
