@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import socket from '../utils/socket';
+import { toast } from 'react-toastify';
+import i18n from '../utils/i18n';
 
 export const fetchChannels = createAsyncThunk(
   'chat/fetchChannels',
@@ -154,6 +156,7 @@ const chatSlice = createSlice({
       .addCase(fetchChannels.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(i18n.t('toast.error', { error: action.payload }));
       })
       .addCase(fetchMessages.pending, state => {
         state.loading = true;
@@ -166,6 +169,7 @@ const chatSlice = createSlice({
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(i18n.t('toast.error', { error: action.payload }));
       })
       .addCase(sendMessage.pending, state => {
         state.loading = true;
@@ -177,6 +181,7 @@ const chatSlice = createSlice({
       .addCase(sendMessage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(i18n.t('toast.error', { error: action.payload }));
         state.networkStatus = 'error';
       })
       .addCase(addChannel.pending, state => {
@@ -189,6 +194,7 @@ const chatSlice = createSlice({
       .addCase(addChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(i18n.t('toast.error', { error: action.payload }));
       })
       .addCase(removeChannel.pending, state => {
         state.loading = true;
@@ -200,6 +206,7 @@ const chatSlice = createSlice({
       .addCase(removeChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(i18n.t('toast.error', { error: action.payload }));
       })
       .addCase(renameChannel.pending, state => {
         state.loading = true;
@@ -211,6 +218,7 @@ const chatSlice = createSlice({
       .addCase(renameChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(i18n.t('toast.error', { error: action.payload }));
       });
   },
 });
@@ -228,6 +236,7 @@ export default chatSlice.reducer;
 export const initWebSocket = () => dispatch => {
   socket.on('connect', () => {
     dispatch(setNetworkStatus('connected'));
+    toast.dismiss();
   });
 
   socket.on('newMessage', data => {
@@ -248,10 +257,12 @@ export const initWebSocket = () => dispatch => {
 
   socket.on('connect_error', () => {
     dispatch(setNetworkStatus('error'));
+    toast.error(i18n.t('toast.networkError'));
   });
 
   socket.on('disconnect', () => {
     dispatch(setNetworkStatus('disconnected'));
+    toast.error(i18n.t('toast.networkError'));
   });
 
   if (socket.connected) {

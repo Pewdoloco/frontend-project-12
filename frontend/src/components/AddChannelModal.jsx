@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { Modal, Button, Form as BootstrapForm, Alert } from 'react-bootstrap';
 import { addChannel } from '../store';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -24,7 +25,7 @@ const TextInput = ({ label, ...props }) => {
 
 function AddChannelModal({ show, onHide }) {
   const dispatch = useDispatch();
-  const { channels, error, loading } = useSelector(state => state.chat);
+  const { loading, error } = useSelector(state => state.chat);
   const { t } = useTranslation();
   const inputRef = useRef(null);
 
@@ -38,7 +39,6 @@ function AddChannelModal({ show, onHide }) {
     name: Yup.string()
       .min(3, t('modals.nameLength'))
       .max(20, t('modals.nameLength'))
-      .notOneOf(channels.map(c => c.name), t('modals.uniqueName'))
       .required(t('modals.required')),
   });
 
@@ -54,10 +54,13 @@ function AddChannelModal({ show, onHide }) {
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             try {
-              await dispatch(addChannel(values.name)).unwrap();
+              const result = await dispatch(addChannel(values.name)).unwrap();
+              toast.success(t('toast.channelAdded', { name: values.name }));
               resetForm();
               onHide();
             } catch {
+              // Ошибка уже обработана в Redux
+            } finally {
               setSubmitting(false);
             }
           }}
