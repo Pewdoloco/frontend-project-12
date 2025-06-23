@@ -7,6 +7,8 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 console.log('Loaded .env token env:', process.env.VITE_ROLLBAR_SERVER_TOKEN);
+console.log('Raw env token=>', JSON.stringify(process.env.VITE_ROLLBAR_SERVER_TOKEN));
+
 const accessToken = process.env.VITE_ROLLBAR_SERVER_TOKEN;
 const version = process.env.VITE_GIT_SHA || 'unknown';
 const sourceMapsDir = path.join(__dirname, 'sourceMaps');
