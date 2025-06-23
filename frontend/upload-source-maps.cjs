@@ -4,7 +4,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 const dotenv = require('dotenv');
 
-dotenv.config({ path: path.resolve(__dirname, './.env') });
+dotenv.config({ path: path.resolve(__dirname, './.env.rollbar') });
 
 console.log('Loaded .env token env:', process.env.VITE_ROLLBAR_SERVER_TOKEN);
 console.log('Raw env token=>', JSON.stringify(process.env.VITE_ROLLBAR_SERVER_TOKEN));
