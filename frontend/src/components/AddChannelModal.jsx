@@ -20,7 +20,7 @@ const TextInput = ({ label, ...props }) => {
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">
-          {meta.error === 'Required' ? t('modals.required') : meta.error}
+          {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
         </div>
       ) : null}
     </BootstrapForm.Group>
@@ -29,7 +29,7 @@ const TextInput = ({ label, ...props }) => {
 
 function AddChannelModal({ show, onHide }) {
   const dispatch = useDispatch();
-  const { loading } = useSelector(state => state.chat);
+  const { loading, channels } = useSelector(state => state.chat);
   const { t } = useTranslation();
   const inputRef = useRef(null);
 
@@ -41,9 +41,12 @@ function AddChannelModal({ show, onHide }) {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .min(3, t('modals.nameLength'))
-      .max(20, t('modals.nameLength'))
-      .required(t('modals.required')),
+      .min(3, 'modals.nameLength')
+      .max(20, 'modals.nameLength')
+      .required('modals.required')
+      .test('unique-name', 'modals.uniqueName', value => {
+        return !channels.some(channel => channel.name === value);
+      }),
   });
 
   return (
@@ -62,8 +65,8 @@ function AddChannelModal({ show, onHide }) {
               toast.success(t('toast.channelAdded', { name: cleanedName }));
               resetForm();
               onHide();
-            } catch {
-              // Ошибка обрабатывается в chatSlice.js через toast.error
+            } catch (err) {
+              toast.error(t('toast.error', { error: err.message }));
             } finally {
               setSubmitting(false);
             }

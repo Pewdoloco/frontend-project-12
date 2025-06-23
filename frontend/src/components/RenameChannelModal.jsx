@@ -6,6 +6,10 @@ import { Modal, Button, Form as BootstrapForm } from 'react-bootstrap';
 import { renameChannel } from '../store';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import LeoProfanity from 'leo-profanity';
+import profanityWords from '../utils/profanityDictionary';
+
+LeoProfanity.add(profanityWords);
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -16,7 +20,7 @@ const TextInput = ({ label, ...props }) => {
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">
-          {meta.error === 'Required' ? t('modals.required') : meta.error}
+          {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
         </div>
       ) : null}
     </BootstrapForm.Group>
@@ -25,7 +29,7 @@ const TextInput = ({ label, ...props }) => {
 
 function RenameChannelModal({ show, onHide, channelId, currentName }) {
   const dispatch = useDispatch();
-  const { loading } = useSelector(state => state.chat);
+  const { loading, channels } = useSelector(state => state.chat);
   const { t } = useTranslation();
   const inputRef = useRef(null);
 
@@ -38,13 +42,16 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .min(3, t('modals.nameLength'))
-      .max(20, t('modals.nameLength'))
-      .required(t('modals.required')),
+      .min(3, 'modals.nameLength')
+      .max(20, 'modals.nameLength')
+      .required('modals.required')
+      .test('unique-name', 'modals.uniqueName', value => {
+        return !channels.some(channel => channel.name === value && channel.id !== channelId);
+      }),
   });
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide affaires={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t('modals.renameChannel')}</Modal.Title>
       </Modal.Header>
@@ -53,12 +60,13 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
           initialValues={{ name: currentName }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
+            const cleanedName = LeoProfanity.clean(values.name);
             try {
-              await dispatch(renameChannel({ id: channelId, name: values.name })).unwrap();
-              toast.success(t('toast.channelRenamed', { name: currentName }));
+              await dispatch(renameChannel({ id: channelId, name: cleanedName })).unwrap();
+              toast.success(t('toast.channelRenamed', { name: cleanedName }));
               onHide();
-            } catch {
-              // Ошибка обрабатывается в chatSlice.js через toast.error
+            } catch (err) {
+              toast.error(t('toast.error', { error: err.message }));
             } finally {
               setSubmitting(false);
             }
