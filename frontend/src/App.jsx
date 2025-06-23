@@ -9,7 +9,6 @@ import Signup from './pages/Signup.jsx';
 import NotFound from './pages/NotFound.jsx';
 import './App.css';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import TestError from './TestError.jsx';
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
@@ -43,7 +42,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/test-error" element={<TestError />} />
         </Routes>
       </ErrorBoundary>
     </Provider>
