@@ -13,7 +13,6 @@ import {
   ListGroup,
   Form,
   Button,
-  Alert,
   Dropdown,
   ButtonGroup,
 } from 'react-bootstrap';
@@ -22,10 +21,14 @@ import RemoveChannelModal from '../components/RemoveChannelModal';
 import RenameChannelModal from '../components/RenameChannelModal';
 import './Home.css';
 import { useTranslation } from 'react-i18next';
+import LeoProfanity from 'leo-profanity';
+import profanityWords from '../utils/profanityDictionary';
+
+LeoProfanity.add(profanityWords);
 
 function Home() {
   const dispatch = useDispatch();
-  const { channels, messages, currentChannelId, loading, error, networkStatus } = useSelector(
+  const { channels, messages, currentChannelId, loading, networkStatus } = useSelector(
     state => state.chat
   );
   const { t } = useTranslation();
@@ -33,14 +36,15 @@ function Home() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(null);
   const [showRenameModal, setShowRenameModal] = useState(null);
-  const [isWebSocketInitialized, setIsWebSocketInitialized] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchChannels());
-    dispatch(fetchMessages());
-    const cleanup = dispatch(initWebSocket());
-    setIsWebSocketInitialized(true);
-    return () => cleanup();
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch(fetchChannels());
+      dispatch(fetchMessages());
+      const cleanup = dispatch(initWebSocket());
+      return () => cleanup();
+    }
   }, [dispatch]);
 
   const handleChannelSelect = channelId => {
@@ -49,17 +53,19 @@ function Home() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (messageInput.trim()) {
-      const username = localStorage.getItem('username') || 'unknown';
-      dispatch(
-        sendMessage({
-          body: messageInput,
-          channelId: currentChannelId,
-          username,
-        })
-      );
-      setMessageInput('');
-    }
+    if (!messageInput.trim() || !currentChannelId) return;
+
+    const cleanedMessage = LeoProfanity.clean(messageInput);
+
+    const username = localStorage.getItem('username') || 'unknown';
+    dispatch(
+      sendMessage({
+        body: cleanedMessage,
+        channelId: currentChannelId,
+        username,
+      })
+    );
+    setMessageInput('');
   };
 
   const filteredMessages = messages.filter(
@@ -68,10 +74,6 @@ function Home() {
 
   return (
     <Container fluid className="chat-container">
-      {error && <Alert variant="danger">{t('common.error')}: {error}</Alert>}
-      {isWebSocketInitialized && networkStatus === 'disconnected' && (
-        <Alert variant="warning">{t('common.disconnected')}</Alert>
-      )}
       {loading && <div>{t('common.loading')}</div>}
       <div className="chat-content">
         <Col className="channel-list">

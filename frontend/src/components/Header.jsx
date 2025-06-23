@@ -10,6 +10,7 @@ function Header() {
   const isAuthenticated = !!localStorage.getItem('token');
 
   const handleLogout = () => {
+    localStorage.setItem('isLoggingOut', 'true');
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     socket.disconnect();

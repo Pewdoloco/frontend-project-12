@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Button, Alert } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import { removeChannel } from '../store';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 function RemoveChannelModal({ show, onHide, channelId }) {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.chat);
+  const { loading } = useSelector(state => state.chat);
   const { t } = useTranslation();
   const state = useSelector(state => state.chat);
 
@@ -17,7 +17,6 @@ function RemoveChannelModal({ show, onHide, channelId }) {
         <Modal.Title>{t('modals.removeChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {error && <Alert variant="danger">{t('common.error')}: {error}</Alert>}
         <p>{t('modals.confirmRemove')}</p>
       </Modal.Body>
       <Modal.Footer>
@@ -33,7 +32,7 @@ function RemoveChannelModal({ show, onHide, channelId }) {
               toast.success(t('toast.channelRemoved', { name: channelName }));
               onHide();
             } catch {
-              // Ошибка уже обработана в Redux
+              // Ошибка обрабатывается в chatSlice.js через toast.error
             }
           }}
           disabled={loading}

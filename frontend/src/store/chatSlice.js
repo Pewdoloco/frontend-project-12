@@ -14,7 +14,7 @@ export const fetchChannels = createAsyncThunk(
       });
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Failed to fetch channels');
+      return rejectWithValue(err.response?.data?.message || i18n.t('toast.fetchChannelsFailed'));
     }
   }
 );
@@ -29,7 +29,7 @@ export const fetchMessages = createAsyncThunk(
       });
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Failed to fetch messages');
+      return rejectWithValue(err.response?.data?.message || i18n.t('toast.fetchMessagesFailed'));
     }
   }
 );
@@ -46,7 +46,7 @@ export const sendMessage = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Failed to send message');
+      return rejectWithValue(err.response?.data?.message || i18n.t('toast.sendMessageFailed'));
     }
   }
 );
@@ -63,7 +63,7 @@ export const addChannel = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Failed to add channel');
+      return rejectWithValue(err.response?.data?.message || i18n.t('toast.addChannelFailed'));
     }
   }
 );
@@ -78,7 +78,7 @@ export const removeChannel = createAsyncThunk(
       });
       return id;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Failed to remove channel');
+      return rejectWithValue(err.response?.data?.message || i18n.t('toast.removeChannelFailed'));
     }
   }
 );
@@ -95,7 +95,7 @@ export const renameChannel = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Failed to rename channel');
+      return rejectWithValue(err.response?.data?.message || i18n.t('toast.renameChannelFailed'));
     }
   }
 );
@@ -109,6 +109,7 @@ const chatSlice = createSlice({
     loading: false,
     error: null,
     networkStatus: 'disconnected',
+    errorDisplayed: false,
   },
   reducers: {
     setCurrentChannelId: (state, action) => {
@@ -140,6 +141,9 @@ const chatSlice = createSlice({
         channel.name = action.payload.name;
       }
     },
+    resetErrorDisplayed: (state) => {
+      state.errorDisplayed = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -152,11 +156,15 @@ const chatSlice = createSlice({
         state.channels = action.payload;
         const generalChannel = action.payload.find(c => c.name === 'general');
         state.currentChannelId = generalChannel?.id || action.payload[0]?.id || null;
+        state.errorDisplayed = false;
       })
       .addCase(fetchChannels.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(i18n.t('toast.error', { error: action.payload }));
+        if (!state.errorDisplayed) {
+          toast.error(i18n.t('toast.error', { error: action.payload }), { toastId: 'data-fetch-error' });
+          state.errorDisplayed = true;
+        }
       })
       .addCase(fetchMessages.pending, state => {
         state.loading = true;
@@ -165,11 +173,15 @@ const chatSlice = createSlice({
       .addCase(fetchMessages.fulfilled, (state, action) => {
         state.loading = false;
         state.messages = action.payload;
+        state.errorDisplayed = false;
       })
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(i18n.t('toast.error', { error: action.payload }));
+        if (!state.errorDisplayed) {
+          toast.error(i18n.t('toast.error', { error: action.payload }), { toastId: 'data-fetch-error' });
+          state.errorDisplayed = true;
+        }
       })
       .addCase(sendMessage.pending, state => {
         state.loading = true;
@@ -177,12 +189,14 @@ const chatSlice = createSlice({
       })
       .addCase(sendMessage.fulfilled, state => {
         state.loading = false;
+        state.errorDisplayed = false;
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(i18n.t('toast.error', { error: action.payload }));
         state.networkStatus = 'error';
+        state.errorDisplayed = false;
       })
       .addCase(addChannel.pending, state => {
         state.loading = true;
@@ -190,11 +204,13 @@ const chatSlice = createSlice({
       })
       .addCase(addChannel.fulfilled, state => {
         state.loading = false;
+        state.errorDisplayed = false;
       })
       .addCase(addChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(i18n.t('toast.error', { error: action.payload }));
+        state.errorDisplayed = false;
       })
       .addCase(removeChannel.pending, state => {
         state.loading = true;
@@ -202,11 +218,13 @@ const chatSlice = createSlice({
       })
       .addCase(removeChannel.fulfilled, state => {
         state.loading = false;
+        state.errorDisplayed = false;
       })
       .addCase(removeChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(i18n.t('toast.error', { error: action.payload }));
+        state.errorDisplayed = false;
       })
       .addCase(renameChannel.pending, state => {
         state.loading = true;
@@ -214,11 +232,13 @@ const chatSlice = createSlice({
       })
       .addCase(renameChannel.fulfilled, state => {
         state.loading = false;
+        state.errorDisplayed = false;
       })
       .addCase(renameChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(i18n.t('toast.error', { error: action.payload }));
+        state.errorDisplayed = false;
       });
   },
 });
@@ -230,13 +250,13 @@ export const {
   addChannelSync,
   removeChannelSync,
   renameChannelSync,
+  resetErrorDisplayed,
 } = chatSlice.actions;
 export default chatSlice.reducer;
 
 export const initWebSocket = () => dispatch => {
   socket.on('connect', () => {
     dispatch(setNetworkStatus('connected'));
-    toast.dismiss();
   });
 
   socket.on('newMessage', data => {
@@ -255,14 +275,13 @@ export const initWebSocket = () => dispatch => {
     dispatch(renameChannelSync(data));
   });
 
-  socket.on('connect_error', () => {
-    dispatch(setNetworkStatus('error'));
-    toast.error(i18n.t('toast.networkError'));
-  });
-
   socket.on('disconnect', () => {
-    dispatch(setNetworkStatus('disconnected'));
-    toast.error(i18n.t('toast.networkError'));
+    const isLoggingOut = localStorage.getItem('isLoggingOut') === 'true';
+    if (!isLoggingOut) {
+      dispatch(setNetworkStatus('disconnected'));
+      toast.error(i18n.t('toast.networkError'), { toastId: 'network-error' });
+    }
+    localStorage.removeItem('isLoggingOut');
   });
 
   if (socket.connected) {
@@ -277,7 +296,6 @@ export const initWebSocket = () => dispatch => {
     socket.off('newChannel');
     socket.off('removeChannel');
     socket.off('renameChannel');
-    socket.off('connect_error');
     socket.off('disconnect');
   };
 };

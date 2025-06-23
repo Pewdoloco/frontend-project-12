@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
-import { Modal, Button, Form as BootstrapForm, Alert } from 'react-bootstrap';
+import { Modal, Button, Form as BootstrapForm } from 'react-bootstrap';
 import { renameChannel } from '../store';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -25,7 +25,7 @@ const TextInput = ({ label, ...props }) => {
 
 function RenameChannelModal({ show, onHide, channelId, currentName }) {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.chat);
+  const { loading } = useSelector(state => state.chat);
   const { t } = useTranslation();
   const inputRef = useRef(null);
 
@@ -49,7 +49,6 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
         <Modal.Title>{t('modals.renameChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {error && <Alert variant="danger">{t('common.error')}: {error}</Alert>}
         <Formik
           initialValues={{ name: currentName }}
           validationSchema={validationSchema}
@@ -59,7 +58,7 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
               toast.success(t('toast.channelRenamed', { name: currentName }));
               onHide();
             } catch {
-              // Ошибка уже обработана в Redux
+              // Ошибка обрабатывается в chatSlice.js через toast.error
             } finally {
               setSubmitting(false);
             }

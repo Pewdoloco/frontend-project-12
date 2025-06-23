@@ -2,10 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
-import { Modal, Button, Form as BootstrapForm, Alert } from 'react-bootstrap';
+import { Modal, Button, Form as BootstrapForm } from 'react-bootstrap';
 import { addChannel } from '../store';
 import { useTranslation } from 'react-i18next';
+import LeoProfanity from 'leo-profanity';
 import { toast } from 'react-toastify';
+import profanityWords from '../utils/profanityDictionary';
+
+LeoProfanity.add(profanityWords);
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -25,7 +29,7 @@ const TextInput = ({ label, ...props }) => {
 
 function AddChannelModal({ show, onHide }) {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.chat);
+  const { loading } = useSelector(state => state.chat);
   const { t } = useTranslation();
   const inputRef = useRef(null);
 
@@ -48,18 +52,18 @@ function AddChannelModal({ show, onHide }) {
         <Modal.Title>{t('modals.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {error && <Alert variant="danger">{t('common.error')}: {error}</Alert>}
         <Formik
           initialValues={{ name: '' }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
+            const cleanedName = LeoProfanity.clean(values.name);
             try {
-              await dispatch(addChannel(values.name)).unwrap();
-              toast.success(t('toast.channelAdded', { name: values.name }));
+              await dispatch(addChannel(cleanedName)).unwrap();
+              toast.success(t('toast.channelAdded', { name: cleanedName }));
               resetForm();
               onHide();
             } catch {
-              // Ошибка уже обработана в Redux
+              // Ошибка обрабатывается в chatSlice.js через toast.error
             } finally {
               setSubmitting(false);
             }
