@@ -1,1 +1,12 @@
 node_modules
+dist
+sourceMaps
+.env
+logs
+*.log
+npm-debug.log*
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+upload-source-maps.js
