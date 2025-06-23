@@ -1,7 +1,6 @@
 node_modules
 dist
 sourceMaps
-.env
 logs
 *.log
 npm-debug.log*
