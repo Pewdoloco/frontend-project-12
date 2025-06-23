@@ -1,23 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const FormData = require('form-data');
 const dotenv = require('dotenv');
 
-dotenv.config({ path: path.resolve(__dirname, './.env.rollbar') });
-
-console.log('Loaded .env token env:', process.env.VITE_ROLLBAR_SERVER_TOKEN);
-console.log('Raw env token=>', JSON.stringify(process.env.VITE_ROLLBAR_SERVER_TOKEN));
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const accessToken = process.env.VITE_ROLLBAR_SERVER_TOKEN;
 const version = process.env.VITE_GIT_SHA || 'unknown';
 const sourceMapsDir = path.join(__dirname, 'sourceMaps');
 const domain = 'https://frontend-project-12-tw18.onrender.com';
 
-console.log(
-  'Using Rollbar server token:',
-  accessToken ? `${accessToken.slice(0, 4)}...` : 'Not set'
-);
+console.log('Using Rollbar server token:', accessToken ? `${accessToken.slice(0, 4)}...` : 'Not set');
 console.log('Version:', version);
 console.log('Source maps directory:', sourceMapsDir);
 
@@ -28,22 +21,22 @@ async function uploadSourceMap(filename) {
   console.log('Uploading source map:', filename);
   console.log('Minified URL:', minifiedUrl);
 
-  const form = new FormData();
-  form.append('access_token', accessToken);
-  form.append('version', version);
-  form.append('minified_url', minifiedUrl);
-  form.append('source_map', fs.createReadStream(sourceMapPath));
-
   try {
     const response = await axios.post(
       'https://api.rollbar.com/api/1/sourcemap',
-      form,
-      { headers: form.getHeaders() }
+      {
+        access_token: accessToken,
+        version,
+        minified_url: minifiedUrl,
+        source_map: fs.createReadStream(sourceMapPath),
+      },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
-    console.log(
-      `Source map ${filename} uploaded successfully:`,
-      response.data
-    );
+    console.log(`Source map ${filename} uploaded successfully:`, response.data);
   } catch (error) {
     console.error(`Failed to upload source map ${filename}:`, error.message);
     if (error.response) {
@@ -53,8 +46,14 @@ async function uploadSourceMap(filename) {
   }
 }
 
-fs.readdirSync(sourceMapsDir).forEach((file) => {
-  if (file.endsWith('.map')) {
-    uploadSourceMap(file);
+try {
+  const files = fs.readdirSync(sourceMapsDir);
+  const mapFiles = files.filter(file => file.endsWith('.map'));
+  if (mapFiles.length === 0) {
+    console.warn('No source map files found in sourceMaps directory.');
+    return;
   }
-});
+  mapFiles.forEach(file => uploadSourceMap(file));
+} catch (err) {
+  console.error('Error reading source maps directory:', err.message);
+}
