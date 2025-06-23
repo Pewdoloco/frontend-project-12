@@ -6,7 +6,7 @@
   "scripts": {
   "dev": "vite",
   "build": "VITE_GIT_SHA=`git rev-parse HEAD` vite build && npm run upload-source-maps",
-  "upload-source-maps": "rm -rf sourceMaps && mkdir -p sourceMaps && (mv dist/assets/*.map sourceMaps/ || true) && node upload-source-maps.js",
+  "upload-source-maps": "rm -rf sourceMaps && mkdir -p sourceMaps && (mv dist/assets/*.map sourceMaps/ || true) && node upload-source-maps.cjs",
   "lint": "eslint .",
   "preview": "vite preview"
 },
