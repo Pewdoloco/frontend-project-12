@@ -6,6 +6,7 @@ export default {
       disconnected: 'Отключено от сервера. Переподключение...',
       error: 'Ошибка',
       connectionError: 'Ошибка соединения',
+      unauthorized: 'Неавторизован',
     },
     header: {
       appName: 'Hexlet Chat',
@@ -53,6 +54,7 @@ export default {
       passwordMatch: 'Пароли должны совпадать',
       minPasswordLength: 'Не менее 6 символов',
       nameLength: 'От 3 до 20 символов',
+      success: 'Регистрация успешна',
     },
     notFound: {
       title: '404 - Страница не найдена',

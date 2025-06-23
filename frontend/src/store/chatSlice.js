@@ -14,7 +14,10 @@ export const fetchChannels = createAsyncThunk(
       });
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || i18n.t('toast.fetchChannelsFailed'));
+      const errorMessage = err.response?.status === 401
+        ? i18n.t('common.unauthorized')
+        : err.response?.data?.message || i18n.t('toast.fetchChannelsFailed');
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -29,7 +32,10 @@ export const fetchMessages = createAsyncThunk(
       });
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || i18n.t('toast.fetchMessagesFailed'));
+      const errorMessage = err.response?.status === 401
+        ? i18n.t('common.unauthorized')
+        : err.response?.data?.message || i18n.t('toast.fetchMessagesFailed');
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -46,7 +52,10 @@ export const sendMessage = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || i18n.t('toast.sendMessageFailed'));
+      const errorMessage = err.response?.status === 401
+        ? i18n.t('common.unauthorized')
+        : err.response?.data?.message || i18n.t('toast.sendMessageFailed');
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -63,7 +72,10 @@ export const addChannel = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || i18n.t('toast.addChannelFailed'));
+      const errorMessage = err.response?.status === 401
+        ? i18n.t('common.unauthorized')
+        : err.response?.data?.message || i18n.t('toast.addChannelFailed');
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -78,7 +90,10 @@ export const removeChannel = createAsyncThunk(
       });
       return id;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || i18n.t('toast.removeChannelFailed'));
+      const errorMessage = err.response?.status === 401
+        ? i18n.t('common.unauthorized')
+        : err.response?.data?.message || i18n.t('toast.removeChannelFailed');
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -95,7 +110,10 @@ export const renameChannel = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || i18n.t('toast.renameChannelFailed'));
+      const errorMessage = err.response?.status === 401
+        ? i18n.t('common.unauthorized')
+        : err.response?.data?.message || i18n.t('toast.renameChannelFailed');
+      return rejectWithValue(errorMessage);
     }
   }
 );

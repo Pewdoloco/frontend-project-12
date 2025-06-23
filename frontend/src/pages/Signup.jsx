@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import './Signup.css';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +16,7 @@ const TextInput = ({ label, ...props }) => {
       <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
-        <div className="text-danger mt-1">{meta.error}</div>
+        <div className="text-danger mt-1">{t(meta.error)}</div>
       ) : null}
     </BootstrapForm.Group>
   );
@@ -28,21 +29,21 @@ function Signup() {
 
   const validationSchema = Yup.object({
     username: Yup.string()
-      .min(3, t('signup.minPasswordLength'))
-      .max(20, t('signup.minPasswordLength'))
-      .required(t('login.invalidCredentials')),
+      .min(3, 'signup.nameLength')
+      .max(20, 'signup.nameLength')
+      .required('modals.required'),
     password: Yup.string()
-      .min(6, t('signup.minPasswordLength'))
-      .required(t('login.invalidCredentials')),
+      .min(6, 'signup.minPasswordLength')
+      .required('modals.required'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], t('signup.passwordMatch'))
-      .required(t('login.invalidCredentials')),
+      .oneOf([Yup.ref('password'), null], 'signup.passwordMatch')
+      .required('modals.required'),
   });
 
   return (
     <div className="signup-container">
       <h1>{t('signup.title')}</h1>
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && <Alert variant="danger">{t(error)}</Alert>}
       <Formik
         initialValues={{ username: '', password: '', confirmPassword: '' }}
         validationSchema={validationSchema}
@@ -55,12 +56,13 @@ function Signup() {
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('username', response.data.username);
             setError(null);
+            toast.success(t('signup.success'));
             navigate('/');
           } catch (err) {
             if (err.response?.status === 409) {
-              setError(t('signup.userExists'));
+              setError('signup.userExists');
             } else {
-              setError(t('signup.registrationFailed'));
+              setError('signup.registrationFailed');
             }
             setSubmitting(false);
           }
