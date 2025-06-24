@@ -6,19 +6,23 @@ import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap';
 import './Login.css';
 import { useTranslation } from 'react-i18next';
 
-const TextInput = ({ label, ...props }) => {
+const TextInput = ({id, ...props }) => {
   const [field, meta] = useField(props);
-  const { t } = useTranslation();
   return (
-    <BootstrapForm.Group className="mb-3">
-      <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
-      <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
-      {meta.touched && meta.error ? (
-        <div className="text-danger mt-1">{t(meta.error)}</div>
-      ) : null}
+    <BootstrapForm.Group className="form-floating mb-3">
+      <BootstrapForm.Control {...field} {...props}
+        id={id}
+        placeholder=""
+        isInvalid={meta.touched && meta.error}
+      />
+      <BootstrapForm.Label htmlFor={id}>{props.placeholder}</BootstrapForm.Label>
+      {meta.touched && meta.error && (
+        <div className="text-danger mt-1">{meta.error}</div>
+      )}
     </BootstrapForm.Group>
   );
 };
+
 
 function Login() {
   const navigate = useNavigate();
@@ -64,18 +68,20 @@ function Login() {
       >
         {({ isSubmitting }) => (
           <Form className="login-form">
-            <TextInput
-              name="username"
-              type="text"
-              placeholder={t('login.username')}
-              disabled={isSubmitting}
-            />
-            <TextInput
-              name="password"
-              type="password"
-              placeholder={t('login.password')}
-              disabled={isSubmitting}
-            />
+          <TextInput
+            name="username"
+            type="text"
+            id="username"
+            placeholder={t('login.username')}
+            disabled={isSubmitting}
+          />
+          <TextInput
+            name="password"
+            type="password"
+            id="password"
+            placeholder={t('login.password')}
+            disabled={isSubmitting}
+          />
             <Button
               type="submit"
               variant="primary"
