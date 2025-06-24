@@ -49,7 +49,7 @@ export default {
       signup: 'Зарегистрироваться',
       haveAccount: 'Уже есть аккаунт? ',
       login: 'Войти',
-      userExists: 'Пользователь уже существует',
+      userExists: 'Такой пользователь уже существует',
       registrationFailed: 'Регистрация не удалась. Попробуйте снова.',
       passwordMatch: 'Пароли должны совпадать',
       minPasswordLength: 'Не менее 6 символов',
