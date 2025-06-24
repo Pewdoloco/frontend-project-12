@@ -8,12 +8,11 @@ import { toast } from 'react-toastify';
 import './Signup.css';
 import { useTranslation } from 'react-i18next';
 
-const TextInput = ({ label, ...props }) => {
+const TextInput = ({...props }) => {
   const [field, meta] = useField(props);
   const { t } = useTranslation();
   return (
     <BootstrapForm.Group className="mb-3">
-      <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">{t(meta.error)}</div>
@@ -57,7 +56,7 @@ function Signup() {
             localStorage.setItem('username', response.data.username);
             setError(null);
             toast.success(t('signup.success'));
-            setTimeout(() => navigate('/'), 100);
+            navigate('/');
           } catch (err) {
             if (err.response?.status === 409) {
               setError('signup.userExists');
