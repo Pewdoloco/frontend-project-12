@@ -65,14 +65,12 @@ function Login() {
         {({ isSubmitting }) => (
           <Form className="login-form">
             <TextInput
-              label="login.username"
               name="username"
               type="text"
               placeholder={t('login.username')}
               disabled={isSubmitting}
             />
             <TextInput
-              label="login.password"
               name="password"
               type="password"
               placeholder={t('login.password')}
