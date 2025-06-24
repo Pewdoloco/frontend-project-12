@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Provider, ErrorBoundary } from '@rollbar/react';
 import { ToastContainer } from 'react-toastify';
@@ -28,9 +28,18 @@ const rollbarConfig = {
 };
 
 function App() {
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    registerAdminCI();
+    const init = async () => {
+      await registerAdminCI();
+      setLoading(false);
+    };
+    init();
   }, []);
+
+  if (loading) return null;
+
   return (
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
