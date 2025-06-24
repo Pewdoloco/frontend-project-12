@@ -63,9 +63,9 @@ export default {
     toast: {
       error: 'Произошла ошибка: {{error}}',
       networkError: 'Нет соединения с сервером',
-      channelAdded: 'Канал "{{name}}" создан',
-      channelRenamed: 'Канал "{{name}}" переименован',
-      channelRemoved: 'Канал "{{name}}" удалён',
+      channelAdded: 'Канал создан',
+      channelRenamed: 'Канал переименован',
+      channelRemoved: 'Канал удалён',
       profanityDetected: 'Обнаружены нецензурные слова в "{{name}}"! Действие отменено.',
       fetchChannelsFailed: 'Не удалось загрузить каналы',
       fetchMessagesFailed: 'Не удалось загрузить сообщения',
