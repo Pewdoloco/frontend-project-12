@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 function NotFound() {
   const { t } = useTranslation();
-
   return (
     <Container className="text-center mt-5">
       <Alert variant="warning">
