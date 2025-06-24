@@ -84,6 +84,8 @@
   padding: 0.5rem 1rem;
   width: 100%;
   text-align: left;
+  border: none;
+  background: none;
 }
 .channel-list .btn-link:hover {
   background-color: #f8f9fa;
@@ -91,4 +93,8 @@
 .channel-list .list-group-item.active .btn-link {
   color: #fff;
   background-color: #007bff;
+  border-radius: 0;
+}
+.channel-list .list-group-item {
+  padding: 0;
 }

@@ -57,7 +57,7 @@ function Signup() {
             localStorage.setItem('username', response.data.username);
             setError(null);
             toast.success(t('signup.success'));
-            navigate('/');
+            setTimeout(() => navigate('/'), 100);
           } catch (err) {
             if (err.response?.status === 409) {
               setError('signup.userExists');
