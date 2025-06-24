@@ -49,7 +49,7 @@ function Signup() {
   return (
     <div className="signup-container">
       <h1>{t('signup.title')}</h1>
-      {error && <Alert variant="danger">{t(error)}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
       <Formik
         initialValues={{ username: '', password: '', confirmPassword: '' }}
         validationSchema={validationSchema}
@@ -66,9 +66,9 @@ function Signup() {
             setTimeout(() => navigate('/'), 100);
           } catch (err) {
             if (err.response?.status === 409) {
-              setError('signup.userExists');
+              setError(t('signup.userExists'));
             } else {
-              setError('signup.registrationFailed');
+              setError(t('signup.registrationFailed'));
             }
             setSubmitting(false);
           }
