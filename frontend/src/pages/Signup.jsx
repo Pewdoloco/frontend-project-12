@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 import './Signup.css';
 import { useTranslation } from 'react-i18next';
 
@@ -59,11 +58,12 @@ function Signup() {
               username: values.username,
               password: values.password,
             });
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('username', response.data.username);
-            setError(null);
-            toast.success(t('signup.success'));
-            setTimeout(() => navigate('/'), 100);
+            if (response.status === 201) {
+              localStorage.setItem('token', response.data.token);
+              localStorage.setItem('username', response.data.username);
+              setError(null);
+              navigate('/');
+            }
           } catch (err) {
             if (err.response?.status === 409) {
               setError(t('signup.userExists'));
@@ -72,7 +72,7 @@ function Signup() {
             }
             setSubmitting(false);
           }
-        }}
+        }}        
       >
         {({ isSubmitting }) => (
           <Form className="signup-form">
