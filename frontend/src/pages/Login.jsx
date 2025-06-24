@@ -14,7 +14,7 @@ const TextInput = ({ label, ...props }) => {
       <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
       {meta.touched && meta.error ? (
-        <div className="text-danger mt-1">{meta.error}</div>
+        <div className="text-danger mt-1">{t(meta.error)}</div>
       ) : null}
     </BootstrapForm.Group>
   );
@@ -34,10 +34,10 @@ function Login() {
         validate={values => {
           const errors = {};
           if (!values.username) {
-            errors.username = t('login.invalidCredentials');
+            errors.username = 'login.invalidCredentials';
           }
           if (!values.password) {
-            errors.password = t('login.invalidCredentials');
+            errors.password = 'login.invalidCredentials';
           }
           return errors;
         }}
