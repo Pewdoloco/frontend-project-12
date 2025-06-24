@@ -43,7 +43,7 @@ export default {
     },
     signup: {
       title: 'Регистрация',
-      username: 'Имя пользователя',
+      username: 'Ваш ник',
       password: 'Пароль',
       confirmPassword: 'Подтвердите пароль',
       signup: 'Зарегистрироваться',

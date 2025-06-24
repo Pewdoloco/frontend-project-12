@@ -8,12 +8,17 @@ import { toast } from 'react-toastify';
 import './Signup.css';
 import { useTranslation } from 'react-i18next';
 
-const TextInput = ({...props }) => {
+const TextInput = ({label, ...props }) => {
   const [field, meta] = useField(props);
   const { t } = useTranslation();
   return (
     <BootstrapForm.Group className="mb-3">
-      <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
+      <BootstrapForm.Control 
+      {...field} 
+      {...props}
+      placeholder={t(label)}
+      isInvalid={meta.touched && meta.error} 
+      />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">{t(meta.error)}</div>
       ) : null}
