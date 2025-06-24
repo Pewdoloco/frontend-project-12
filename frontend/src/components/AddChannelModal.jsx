@@ -17,7 +17,7 @@ const TextInput = ({ label, ...props }) => {
   return (
     <BootstrapForm.Group>
       <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
-      <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
+      <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} aria-label={t('modals.channelName')} />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">
           {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
@@ -62,11 +62,11 @@ function AddChannelModal({ show, onHide }) {
             const cleanedName = LeoProfanity.clean(values.name);
             try {
               await dispatch(addChannel(cleanedName)).unwrap();
-              toast.success(t('toast.channelAdded', { name: cleanedName }));
+              toast.success(t('toast.channelAdded'));
               resetForm();
               onHide();
-            } catch (err) {
-              toast.error(t('toast.error', { error: err.message }));
+            } catch {
+              toast.error(t('toast.addChannelFailed'));
             } finally {
               setSubmitting(false);
             }
