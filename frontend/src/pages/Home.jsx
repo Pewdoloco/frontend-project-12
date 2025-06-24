@@ -87,14 +87,19 @@ function Home() {
             {channels.map(channel => (
               <ListGroup.Item
                 key={channel.id}
-                as="button"
-                type="button"
+                as="div"
                 active={channel.id === currentChannelId}
-                className="d-flex justify-content-between align-items-center text-start"
-                onClick={() => handleChannelSelect(channel.id)}
-                role="button"
+                className="d-flex justify-content-between align-items-center"
+                style={{ cursor: 'pointer' }}
               >
-                <span># {channel.name}</span>
+                <button
+                  type="button"
+                  role="button"
+                  className="btn btn-link text-start w-100"
+                  onClick={() => handleChannelSelect(channel.id)}
+                >
+                  # {channel.name}
+                </button>
                 {channel.removable && (
                   <Dropdown as={ButtonGroup}>
                     <Dropdown.Toggle split variant="light" size="sm" />

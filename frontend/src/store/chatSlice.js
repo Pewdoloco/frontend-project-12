@@ -12,11 +12,13 @@ export const fetchChannels = createAsyncThunk(
       const response = await axios.get('/api/v1/channels', {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log('Channels fetched:', response.data);
       return response.data;
     } catch (err) {
       const errorMessage = err.response?.status === 401
         ? i18n.t('common.unauthorized')
         : err.response?.data?.message || i18n.t('toast.fetchChannelsFailed');
+      console.error('Fetch channels error:', err);
       return rejectWithValue(errorMessage);
     }
   }
