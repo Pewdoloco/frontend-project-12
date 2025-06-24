@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchChannels,
@@ -36,6 +36,7 @@ function Home() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(null);
   const [showRenameModal, setShowRenameModal] = useState(null);
+  const messageInputRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -50,6 +51,12 @@ function Home() {
   const handleChannelSelect = channelId => {
     dispatch(setCurrentChannelId(channelId));
   };
+
+  useEffect(() => {
+    if (messageInputRef.current && !loading && currentChannelId && networkStatus === 'connected') {
+      messageInputRef.current.focus();
+    }
+  }, [loading, currentChannelId, networkStatus]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -141,6 +148,8 @@ function Home() {
                 value={messageInput}
                 onChange={e => setMessageInput(e.target.value)}
                 disabled={!currentChannelId || networkStatus !== 'connected'}
+                aria-label="Новое сообщение"
+                ref={messageInputRef}
               />
             </Form.Group>
             <Button
