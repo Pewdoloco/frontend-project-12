@@ -109,7 +109,7 @@ function Home() {
                 </button>
                 {channel.removable && (
                   <Dropdown as={ButtonGroup}>
-                    <Dropdown.Toggle split variant="light" size="sm" />
+                    <Dropdown.Toggle split variant="light" size="sm" aria-label={t('home.channelManagement')}/>
                     <Dropdown.Menu>
                       <Dropdown.Item
                         onClick={() => setShowRenameModal(channel.id)}

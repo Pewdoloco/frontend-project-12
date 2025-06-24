@@ -17,7 +17,7 @@ const TextInput = ({ label, ...props }) => {
   return (
     <BootstrapForm.Group>
       <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
-      <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} />
+      <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} aria-label={t('modals.channelName')}/>
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">
           {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
@@ -51,7 +51,7 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
   });
 
   return (
-    <Modal show={show} onHide affaires={onHide} centered>
+    <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t('modals.renameChannel')}</Modal.Title>
       </Modal.Header>
@@ -63,10 +63,10 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
             const cleanedName = LeoProfanity.clean(values.name);
             try {
               await dispatch(renameChannel({ id: channelId, name: cleanedName })).unwrap();
-              toast.success(t('toast.channelRenamed', { name: cleanedName }));
+              toast.success(t('toast.channelRenamed'));
               onHide();
-            } catch (err) {
-              toast.error(t('toast.error', { error: err.message }));
+            } catch {
+              toast.error(t('toast.renameChannelFailed'));
             } finally {
               setSubmitting(false);
             }
