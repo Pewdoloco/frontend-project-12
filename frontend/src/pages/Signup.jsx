@@ -53,6 +53,7 @@ function Signup() {
         initialValues={{ username: '', password: '', confirmPassword: '' }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
+          setError(null);
           try {
             const response = await axios.post('/api/v1/signup', {
               username: values.username,

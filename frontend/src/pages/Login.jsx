@@ -42,6 +42,7 @@ function Login() {
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
+          setError(null);
           try {
              let response;
              if (import.meta.env.VITE_CI === 'true'
