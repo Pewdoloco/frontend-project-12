@@ -10,7 +10,7 @@ import Signup from './pages/Signup.jsx';
 import NotFound from './pages/NotFound.jsx';
 import './App.css';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import initCI from './utils/initCI';
+import registerAdminCI from './utils/registerAdminCI';
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
@@ -29,7 +29,7 @@ const rollbarConfig = {
 
 function App() {
   useEffect(() => {
-    initCI();
+    registerAdminCI();
   }, []);
   return (
     <Provider config={rollbarConfig}>
