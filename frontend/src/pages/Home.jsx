@@ -40,12 +40,10 @@ function Home() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setTimeout(() => {
-        dispatch(fetchChannels());
-        dispatch(fetchMessages());
-        const cleanup = dispatch(initWebSocket());
-        return () => cleanup();
-      }, 100);
+      dispatch(fetchChannels());
+      dispatch(fetchMessages());
+      const cleanup = dispatch(initWebSocket());
+      return () => cleanup();
     }
   }, [dispatch]);
 
@@ -97,10 +95,10 @@ function Home() {
                 <button
                   type="button"
                   role="button"
-                  className="btn btn-link text-start w-100 rounded-0"
+                  className="btn btn-link text-start w-100"
                   onClick={() => handleChannelSelect(channel.id)}
                 >
-                  <span className="me-1">#</span>{channel.name}
+                  # {channel.name}
                 </button>
                 {channel.removable && (
                   <Dropdown as={ButtonGroup}>
