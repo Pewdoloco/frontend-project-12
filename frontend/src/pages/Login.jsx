@@ -28,7 +28,7 @@ function Login() {
   return (
     <div className="login-container">
       <h1>{t('login.title')}</h1>
-      {error && <Alert variant="danger">{t('login.invalidCredentials')}</Alert>}
+      {error === 'login' && (<Alert variant="danger">{t('login.invalidCredentials')}</Alert>)}
       <Formik
         initialValues={{ username: '', password: '' }}
         validate={values => {
@@ -57,7 +57,7 @@ function Login() {
             setError(null);
             navigate('/');
           } catch {
-            setError(t('login.invalidCredentials'));
+            setError('login');
             setSubmitting(false);
           }
         }}
