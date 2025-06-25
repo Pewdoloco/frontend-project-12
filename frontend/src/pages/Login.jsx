@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Formik, Form, useField } from 'formik';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap';
-import './Login.css';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react'
+import { Formik, Form, useField } from 'formik'
+import { useNavigate, Link } from 'react-router-dom'
+import axios from 'axios'
+import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap'
+import './Login.css'
+import { useTranslation } from 'react-i18next'
 
-const TextInput = ({id, ...props }) => {
-  const [field, meta] = useField(props);
+const TextInput = ({id, ...props }) => { 
+  const [field, meta] = useField(props)
   return (
     <BootstrapForm.Group className="form-floating mb-3">
-      <BootstrapForm.Control {...field} {...props}
+      <BootstrapForm.Control
+      {...field}
+      {...props}
         id={id}
         placeholder=""
         isInvalid={meta.touched && meta.error}
@@ -20,14 +22,13 @@ const TextInput = ({id, ...props }) => {
         <div className="text-danger mt-1">{meta.error}</div>
       )}
     </BootstrapForm.Group>
-  );
-};
-
+  )
+}
 
 function Login() {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const [error, setError] = useState(null);
+  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const [error, setError] = useState(null)
 
   return (
     <div className="login-container">
@@ -35,46 +36,47 @@ function Login() {
       {error === 'login' && (<Alert variant="danger">{t('login.invalidCredentials')}</Alert>)}
       <Formik
         initialValues={{ username: '', password: '' }}
-        validate={values => {
-          const errors = {};
+        validate={(values) => {
+          const errors = {}
           if (!values.username) {
             errors.username = 'login.invalidCredentials';
           }
           if (!values.password) {
             errors.password = 'login.invalidCredentials';
           }
-          return errors;
+          return errors
         }}
         onSubmit={async (values, { setSubmitting }) => {
-          setError(null);
+          setError(null)
           try {
-            const response = await axios.post('/api/v1/login', values);            
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('username', response.data.username);
-            setError(null);
-            navigate('/');
-          } catch {
-            setError('login');
-            setSubmitting(false);
+            const response = await axios.post('/api/v1/login', values)
+            localStorage.setItem('token', response.data.token)
+            localStorage.setItem('username', response.data.username)
+            setError(null)
+            navigate('/')
+          }
+          catch {
+            setError('login')
+            setSubmitting(false)
           }
         }}
       >
         {({ isSubmitting }) => (
           <Form className="login-form">
-          <TextInput
-            name="username"
-            type="text"
-            id="username"
-            placeholder={t('login.username')}
-            disabled={isSubmitting}
-          />
-          <TextInput
-            name="password"
-            type="password"
-            id="password"
-            placeholder={t('login.password')}
-            disabled={isSubmitting}
-          />
+            <TextInput
+              name="username"
+              type="text"
+              id="username"
+              placeholder={t('login.username')}
+              disabled={isSubmitting}
+            />
+            <TextInput
+              name="password"
+              type="password"
+              id="password"
+              placeholder={t('login.password')}
+              disabled={isSubmitting}
+            />
             <Button
               type="submit"
               variant="primary"
@@ -84,13 +86,16 @@ function Login() {
               {t('login.login')}
             </Button>
             <div className="text-center mt-3">
-              {t('login.noAccount')}<Link to="/signup">{t('login.signup')}</Link>
+              {t('login.noAccount')}
+              <Link to="/signup">
+                {t('login.signup')}
+              </Link>
             </div>
           </Form>
         )}
       </Formik>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

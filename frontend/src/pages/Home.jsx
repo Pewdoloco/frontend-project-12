@@ -48,7 +48,7 @@ function Home() {
     }
   }, [dispatch])
 
-  const handleChannelSelect = channelId => {
+  const handleChannelSelect = (channelId) => {
     dispatch(setCurrentChannelId(channelId))
   }
 
@@ -112,7 +112,8 @@ function Home() {
                   <Dropdown as={ButtonGroup}>
                     <Dropdown.Toggle
                       split
-                      variant="light" size="sm"
+                      variant="light"
+                      size="sm"
                       aria-label={t('home.channelManagement')}
                     >
                       {t('home.channelManagement')}
