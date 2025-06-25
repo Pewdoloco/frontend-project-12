@@ -21,15 +21,15 @@ const rollbarConfig = {
     client: {
       javascript: {
         source_map_enabled: true,
-        code_version: import.meta.env.VITE_GIT_SHA || 'unknown'
-      }
-    }
-  }
+        code_version: import.meta.env.VITE_GIT_SHA || 'unknown',
+      },
+    },
+  },
 }
 
 function App() {
   const [loading, setLoading] = useState(true)
-  
+
   useEffect(() => {
     const init = async () => {
       await registerAdminCI()
