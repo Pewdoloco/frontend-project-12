@@ -86,28 +86,28 @@ function AddChannelModal({ show, onHide }) {
                 ref={inputRef}
                 disabled={isSubmitting || loading}
               />
-              {
-                isSubmitting ? 
-              (
-                <div>Loading...</div>
-              ) : (
-                <Modal.Footer>
-                  <Button
-                    variant="secondary"
-                    onClick={onHide}
-                    disabled={isSubmitting || loading}
-                  >
-                    {t('modals.cancel')}
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={isSubmitting || loading}
-                  >
-                    {t('modals.add')}
-                  </Button>
-                </Modal.Footer>
-              )}
+              {isSubmitting
+                ? (
+                  <div>Loading...</div>
+                )
+                : (
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={onHide}
+                      disabled={isSubmitting || loading}
+                    >
+                      {t('modals.cancel')}
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={isSubmitting || loading}
+                    >
+                      {t('modals.add')}
+                    </Button>
+                  </Modal.Footer>
+                )}
             </Form>
           )}
         </Formik>
