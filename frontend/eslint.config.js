@@ -39,7 +39,7 @@ export default [
     },
   },
   {
-    files: ['vite.config.js', 'upload-source-maps.js'],
+    files: ['vite.config.js', 'upload-source-maps.{js,cjs}'],
     languageOptions: {
       globals: {
         ...globals.node,
