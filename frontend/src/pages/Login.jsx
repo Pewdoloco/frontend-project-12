@@ -6,13 +6,13 @@ import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap'
 import './Login.css'
 import { useTranslation } from 'react-i18next'
 
-const TextInput = ({id, ...props }) => { 
+const TextInput = ({ id, ...props }) => {
   const [field, meta] = useField(props)
   return (
     <BootstrapForm.Group className="form-floating mb-3">
       <BootstrapForm.Control
-      {...field}
-      {...props}
+        {...field}
+        {...props}
         id={id}
         placeholder=""
         isInvalid={meta.touched && meta.error}
@@ -39,10 +39,10 @@ function Login() {
         validate={(values) => {
           const errors = {}
           if (!values.username) {
-            errors.username = 'login.invalidCredentials';
+            errors.username = 'login.invalidCredentials'
           }
           if (!values.password) {
-            errors.password = 'login.invalidCredentials';
+            errors.password = 'login.invalidCredentials'
           }
           return errors
         }}

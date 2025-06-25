@@ -13,6 +13,6 @@ const profanityWords = [
   'bugger', 'faggot', 'nigger', 'queer', 'retard', 'idiot', 'moron', 'dumbass',
   'jackass', 'asshole', 'motherfucker', 'cocksucker', 'tit', 'penis', 'vagina',
   'cum', 'piss', 'turd', 'scum', 'trash', 'loser', 'jerkoff',
-];
+]
 
-export default profanityWords;
+export default profanityWords

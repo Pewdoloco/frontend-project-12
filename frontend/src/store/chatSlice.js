@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import socket from '../utils/socket'
 import { toast } from 'react-toastify'
@@ -11,7 +11,7 @@ export const fetchChannels = createAsyncThunk(
       const token = localStorage.getItem('token')
       const response = await axios.get('/api/v1/channels', {
         headers: { Authorization: `Bearer ${token}` },
-      });
+      })
       console.log('Channels fetched:', response.data)
       return response.data
     }
@@ -74,7 +74,7 @@ export const addChannel = createAsyncThunk(
         '/api/v1/channels',
         { name },
         { headers: { Authorization: `Bearer ${token}` } },
-      );
+      )
       return response.data
     }
     catch (err) {

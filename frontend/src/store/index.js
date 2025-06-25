@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit'
 import chatReducer, {
   fetchChannels,
   fetchMessages,
@@ -13,13 +13,13 @@ import chatReducer, {
   addChannelSync,
   removeChannelSync,
   renameChannelSync,
-} from './chatSlice';
+} from './chatSlice'
 
 export const store = configureStore({
   reducer: {
     chat: chatReducer,
   },
-});
+})
 
 export {
   fetchChannels,
@@ -35,4 +35,4 @@ export {
   addChannelSync,
   removeChannelSync,
   renameChannelSync,
-};
+}

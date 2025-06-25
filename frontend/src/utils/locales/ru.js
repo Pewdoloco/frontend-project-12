@@ -76,4 +76,4 @@ export default {
       addChannelFailed: 'Не удалось добавить канал',
     },
   },
-};
+}
