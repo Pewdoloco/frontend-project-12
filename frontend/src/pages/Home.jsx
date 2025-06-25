@@ -116,6 +116,7 @@ function Home() {
                       size="sm"
                       aria-label={t('home.channelManagement')}
                     >
+                      {t('home.channelManagement')}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item
