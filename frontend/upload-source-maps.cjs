@@ -1,14 +1,17 @@
 /* eslint-env node */
+/* global __dirname, process */
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
 const dotenv = require('dotenv')
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') })
+const currentDir = path.dirname(require.main ? require.main.filename : __dirname)
+
+dotenv.config({ path: path.resolve(currentDir, '../.env') })
 
 const accessToken = process.env.VITE_ROLLBAR_SERVER_TOKEN
 const version = process.env.VITE_GIT_SHA || 'unknown'
-const sourceMapsDir = path.join(__dirname, 'sourceMaps')
+const sourceMapsDir = path.join(currentDir, 'sourceMaps')
 const domain = 'https://frontend-project-12-tw18.onrender.com'
 
 console.log('Using Rollbar server token:', accessToken ? `${accessToken.slice(0, 4)}...` : 'Not set')
