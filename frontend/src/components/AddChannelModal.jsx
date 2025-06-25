@@ -23,15 +23,11 @@ const TextInput = ({ label, ...props }) => {
         isInvalid={meta.touched && meta.error}
         aria-label={t('modals.channelName')}
       />
-      {
-        meta.touched && meta.error
-          ?
-            (
-              <div className="text-danger mt-1">
-                {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
-              </div>
-            ) : null
-      }
+      {meta.touched && meta.error && (
+        <div className="text-danger mt-1">
+          {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
+        </div>
+      )}
     </BootstrapForm.Group>
   )
 }
@@ -93,27 +89,25 @@ function AddChannelModal({ show, onHide }) {
                 disabled={isSubmitting || loading}
               />
               {isSubmitting
-                ? (
-                    <div>Loading...</div>
-                  )
+                ? <div>Loading...</div>
                 : (
-                    <Modal.Footer>
-                      <Button
-                        variant="secondary"
-                        onClick={onHide}
-                        disabled={isSubmitting || loading}
-                      >
-                        {t('modals.cancel')}
-                      </Button>
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        disabled={isSubmitting || loading}
-                      >
-                        {t('modals.add')}
-                      </Button>
-                    </Modal.Footer>
-                  )}
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={onHide}
+                      disabled={isSubmitting || loading}
+                    >
+                      {t('modals.cancel')}
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={isSubmitting || loading}
+                    >
+                      {t('modals.add')}
+                    </Button>
+                  </Modal.Footer>
+                )}
             </Form>
           )}
         </Formik>
