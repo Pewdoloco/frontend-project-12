@@ -21,11 +21,11 @@ const TextInput = ({ label, ...props }) => {
       {
         meta.touched && meta.error
           ? (
-            <div className="text-danger mt-1">
-              {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
-            </div>
-          )
-        : null
+              <div className="text-danger mt-1">
+                {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
+              </div>
+            )
+          : null
       }
     </BootstrapForm.Group>
   )
