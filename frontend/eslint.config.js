@@ -11,7 +11,7 @@ import { fileURLToPath } from 'url'
 const gitIgnorePath = fileURLToPath(new URL('.gitignore', import.meta.url))
 
 export default [
-   includeIgnoreFile(gitIgnorePath),
+  includeIgnoreFile(gitIgnorePath),
   {
     files: ['**/*.{js,jsx}'],
     ignores: ['dist/**', 'node_modules/**', 'sourceMaps/**'],
@@ -54,7 +54,7 @@ export default [
   {
     files: ['vite.config.js', 'upload-source-maps.{js,cjs}'],
     plugins: {
-      'n': pluginNode,
+      n: pluginNode,
     },
     languageOptions: {
       globals: {
