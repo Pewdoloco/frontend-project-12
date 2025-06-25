@@ -24,12 +24,14 @@ const TextInput = ({ label, ...props }) => {
         aria-label={t('modals.channelName')}
       />
       {
-        meta.touched && meta.error ?
-      (
-        <div className="text-danger mt-1">
-          {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
-        </div>
-      ) : null}
+        meta.touched && meta.error
+        ?
+            (
+              <div className="text-danger mt-1">
+                {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
+              </div>
+            ) : null
+      }
     </BootstrapForm.Group>
   )
 }
