@@ -18,11 +18,15 @@ const TextInput = ({ label, ...props }) => {
     <BootstrapForm.Group>
       <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
       <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} aria-label={t('modals.channelName')} />
-      {meta.touched && meta.error ? (
-        <div className="text-danger mt-1">
-          {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
-        </div>
-      ) : null}
+      {
+        meta.touched && meta.error
+          ? (
+            <div className="text-danger mt-1">
+              {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
+            </div>
+          )
+        : null
+      }
     </BootstrapForm.Group>
   )
 }
