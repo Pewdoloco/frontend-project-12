@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Formik, Form, useField } from 'formik';
-import * as Yup from 'yup';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap';
-import './Signup.css';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react'
+import { Formik, Form, useField } from 'formik'
+import * as Yup from 'yup'
+import { useNavigate, Link } from 'react-router-dom'
+import axios from 'axios'
+import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap'
+import './Signup.css'
+import { useTranslation } from 'react-i18next'
 
 const TextInput = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  const { t } = useTranslation();
+  const [field, meta] = useField(props)
+  const { t } = useTranslation()
   return (
     <BootstrapForm.Group className="mb-3">
       <BootstrapForm.Label htmlFor={props.name}>{t(label)}</BootstrapForm.Label>
@@ -20,17 +20,23 @@ const TextInput = ({ label, ...props }) => {
         {...props}
         isInvalid={meta.touched && meta.error}
       />
-      {meta.touched && meta.error ? (
-        <div className="text-danger mt-1">{t(meta.error)}</div>
-      ) : null}
+      {
+        meta.touched && meta.error
+          ? (
+              <div className="text-danger mt-1">
+                {t(meta.error)}
+              </div>
+            )
+          : null
+      }
     </BootstrapForm.Group>
-  );
-};
+  )
+}
 
 function Signup() {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const [error, setError] = useState(null);
+  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const [error, setError] = useState(null)
 
   const validationSchema = Yup.object({
     username: Yup.string()
@@ -43,7 +49,7 @@ function Signup() {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'signup.passwordMatch')
       .required('modals.required'),
-  });
+  })
 
   return (
     <div className="signup-container">
@@ -53,27 +59,29 @@ function Signup() {
         initialValues={{ username: '', password: '', confirmPassword: '' }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          setError(null);
+          setError(null)
           try {
             const response = await axios.post('/api/v1/signup', {
               username: values.username,
               password: values.password,
-            });
+            })
             if (response.status === 201) {
-              localStorage.setItem('token', response.data.token);
-              localStorage.setItem('username', response.data.username);
-              setError(null);
-              navigate('/');
+              localStorage.setItem('token', response.data.token)
+              localStorage.setItem('username', response.data.username)
+              setError(null)
+              navigate('/')
             }
-          } catch (err) {
-            if (err.response?.status === 409) {
-              setError(t('signup.userExists'));
-            } else {
-              setError(t('signup.registrationFailed'));
-            }
-            setSubmitting(false);
           }
-        }}        
+          catch (err) {
+            if (err.response?.status === 409) {
+              setError(t('signup.userExists'))
+            }
+            else {
+              setError(t('signup.registrationFailed'))
+            }
+            setSubmitting(false)
+          }
+        }}
       >
         {({ isSubmitting }) => (
           <Form className="signup-form">
@@ -107,13 +115,14 @@ function Signup() {
               {t('signup.signup')}
             </Button>
             <div className="text-center mt-3">
-              {t('signup.haveAccount')}<Link to="/login">{t('signup.login')}</Link>
+              {t('signup.haveAccount')}
+              <Link to="/login">{t('signup.login')}</Link>
             </div>
           </Form>
         )}
       </Formik>
     </div>
-  );
+  )
 }
 
-export default Signup;
+export default Signup

@@ -1,9 +1,8 @@
-import React from 'react';
-import { Container, Alert } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
+import { Container, Alert } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 
 function NotFound() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <Container className="text-center mt-5">
       <Alert variant="warning">
@@ -11,7 +10,7 @@ function NotFound() {
         <p>{t('notFound.message')}</p>
       </Alert>
     </Container>
-  );
+  )
 }
 
-export default NotFound;
+export default NotFound

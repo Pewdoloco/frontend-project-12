@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchChannels,
   fetchMessages,
   sendMessage,
   initWebSocket,
   setCurrentChannelId,
-} from '../store';
+} from '../store'
 import {
   Container,
   Col,
@@ -15,69 +15,69 @@ import {
   Button,
   Dropdown,
   ButtonGroup,
-} from 'react-bootstrap';
-import AddChannelModal from '../components/AddChannelModal';
-import RemoveChannelModal from '../components/RemoveChannelModal';
-import RenameChannelModal from '../components/RenameChannelModal';
-import './Home.css';
-import { useTranslation } from 'react-i18next';
-import LeoProfanity from 'leo-profanity';
-import profanityWords from '../utils/profanityDictionary';
+} from 'react-bootstrap'
+import AddChannelModal from '../components/AddChannelModal'
+import RemoveChannelModal from '../components/RemoveChannelModal'
+import RenameChannelModal from '../components/RenameChannelModal'
+import './Home.css'
+import { useTranslation } from 'react-i18next'
+import LeoProfanity from 'leo-profanity'
+import profanityWords from '../utils/profanityDictionary'
 
-LeoProfanity.add(profanityWords);
+LeoProfanity.add(profanityWords)
 
 function Home() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const { channels, messages, currentChannelId, loading, networkStatus } = useSelector(
-    state => state.chat
-  );
-  const { t } = useTranslation();
-  const [messageInput, setMessageInput] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showRemoveModal, setShowRemoveModal] = useState(null);
-  const [showRenameModal, setShowRenameModal] = useState(null);
-  const messageInputRef = useRef(null);
+    state => state.chat,
+  )
+  const { t } = useTranslation()
+  const [messageInput, setMessageInput] = useState('')
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showRemoveModal, setShowRemoveModal] = useState(null)
+  const [showRenameModal, setShowRenameModal] = useState(null)
+  const messageInputRef = useRef(null)
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token')
     if (token) {
-      dispatch(fetchChannels());
-      dispatch(fetchMessages());
-      const cleanup = dispatch(initWebSocket());
-      return () => cleanup();
+      dispatch(fetchChannels())
+      dispatch(fetchMessages())
+      const cleanup = dispatch(initWebSocket())
+      return () => cleanup()
     }
-  }, [dispatch]);
+  }, [dispatch])
 
   const handleChannelSelect = channelId => {
-    dispatch(setCurrentChannelId(channelId));
-  };
+    dispatch(setCurrentChannelId(channelId))
+  }
 
   useEffect(() => {
     if (messageInputRef.current && !loading && currentChannelId && networkStatus === 'connected') {
-      messageInputRef.current.focus();
+      messageInputRef.current.focus()
     }
-  }, [loading, currentChannelId, networkStatus]);
+  }, [loading, currentChannelId, networkStatus])
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (!messageInput.trim() || !currentChannelId) return;
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!messageInput.trim() || !currentChannelId) return
 
-    const cleanedMessage = LeoProfanity.clean(messageInput);
+    const cleanedMessage = LeoProfanity.clean(messageInput)
 
-    const username = localStorage.getItem('username') || 'unknown';
+    const username = localStorage.getItem('username') || 'unknown'
     dispatch(
       sendMessage({
         body: cleanedMessage,
         channelId: currentChannelId,
         username,
-      })
-    );
-    setMessageInput('');
-  };
+      }),
+    )
+    setMessageInput('')
+  }
 
   const filteredMessages = messages.filter(
-    message => message.channelId === currentChannelId
-  );
+    message => message.channelId === currentChannelId,
+  )
 
   return (
     <Container fluid className="chat-container">
@@ -105,12 +105,16 @@ function Home() {
                   className="btn btn-link text-start w-100"
                   onClick={() => handleChannelSelect(channel.id)}
                 >
-                  # {channel.name}
+                  #
+                  {channel.name}
                 </button>
                 {channel.removable && (
                   <Dropdown as={ButtonGroup}>
-                    <Dropdown.Toggle split variant="light" size="sm" 
-                    aria-label={t('home.channelManagement')}>
+                    <Dropdown.Toggle
+                      split
+                      variant="light" size="sm"
+                      aria-label={t('home.channelManagement')}
+                    >
                       {t('home.channelManagement')}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
@@ -138,7 +142,10 @@ function Home() {
           <div className="messages">
             {filteredMessages.map(message => (
               <div key={message.id} className="message">
-                <strong>{message.username}: </strong>
+                <strong>
+                  {message.username}
+                  :
+                </strong>
                 <span style={{ wordBreak: 'break-word' }}>{message.body}</span>
               </div>
             ))}
@@ -182,7 +189,7 @@ function Home() {
         />
       )}
     </Container>
-  );
+  )
 }
 
-export default Home;
+export default Home
