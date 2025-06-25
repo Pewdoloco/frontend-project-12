@@ -17,11 +17,11 @@ const TextInput = ({ label, ...props }) => {
   return (
     <BootstrapForm.Group>
       <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
-      <BootstrapForm.Control 
-        {...field} 
-        {...props} 
-        isInvalid={meta.touched && meta.error} 
-        aria-label={t('modals.channelName')} 
+      <BootstrapForm.Control
+        {...field}
+        {...props}
+        isInvalid={meta.touched && meta.error}
+        aria-label={t('modals.channelName')}
       />
       {meta.touched && meta.error ? (
         <div className="text-danger mt-1">
@@ -86,20 +86,22 @@ function AddChannelModal({ show, onHide }) {
                 ref={inputRef}
                 disabled={isSubmitting || loading}
               />
-              {isSubmitting ? (
+              {
+                isSubmitting ? 
+              (
                 <div>Loading...</div>
               ) : (
                 <Modal.Footer>
-                  <Button 
-                    variant="secondary" 
-                    onClick={onHide} 
+                  <Button
+                    variant="secondary"
+                    onClick={onHide}
                     disabled={isSubmitting || loading}
                   >
                     {t('modals.cancel')}
                   </Button>
-                  <Button 
-                    type="submit" 
-                    variant="primary" 
+                  <Button
+                    type="submit"
+                    variant="primary"
                     disabled={isSubmitting || loading}
                   >
                     {t('modals.add')}
@@ -115,4 +117,3 @@ function AddChannelModal({ show, onHide }) {
 }
 
 export default AddChannelModal
-
