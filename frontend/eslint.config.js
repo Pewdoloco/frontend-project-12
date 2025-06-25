@@ -1,8 +1,8 @@
-import globals from 'globals';
-import pluginJs from '@eslint/js';
-import pluginReact from 'eslint-plugin-react';
-import pluginReactHooks from 'eslint-plugin-react-hooks';
-import pluginReactRefresh from 'eslint-plugin-react-refresh';
+import globals from 'globals'
+import pluginJs from '@eslint/js'
+import pluginReact from 'eslint-plugin-react'
+import pluginReactHooks from 'eslint-plugin-react-hooks'
+import pluginReactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
   {
@@ -21,7 +21,7 @@ export default [
       },
     },
     plugins: {
-      react: pluginReact,
+      'react': pluginReact,
       'react-hooks': pluginReactHooks,
       'react-refresh': pluginReactRefresh,
     },
@@ -50,4 +50,4 @@ export default [
       },
     },
   },
-];
+]
