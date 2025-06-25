@@ -7,7 +7,7 @@ import pluginReactRefresh from 'eslint-plugin-react-refresh'
 export default [
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['dist/**', 'sourceMaps/**'],
+    ignores: ['dist/**', 'node_modules/**', 'sourceMaps/**'],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -32,10 +32,11 @@ export default [
       ...pluginReactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': 'warn',
       'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
     },
     settings: {
       react: {
-        version: 'detect',
+        version: '19.1.0',
       },
     },
   },
@@ -44,6 +45,8 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node,
+        __dirname: true,
+        process: true,
       },
       parserOptions: {
         ecmaVersion: 'latest',
