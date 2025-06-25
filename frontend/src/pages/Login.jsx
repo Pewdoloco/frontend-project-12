@@ -39,10 +39,10 @@ function Login() {
         validate={(values) => {
           const errors = {}
           if (!values.username) {
-            errors.username = 'login.invalidCredentials'
+            errors.username = t('login.invalidCredentials')
           }
           if (!values.password) {
-            errors.password = 'login.invalidCredentials'
+            errors.password = t('login.invalidCredentials')
           }
           return errors
         }}
