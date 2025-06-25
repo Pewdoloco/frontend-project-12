@@ -3,6 +3,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    node: true,
   },
   parserOptions: {
     ecmaVersion: 'latest',
@@ -18,11 +19,11 @@ module.exports = {
     'plugin:react-hooks/recommended',
   ],
   rules: {
-    "react/react-in-jsx-scope": "off"
+    'react/react-in-jsx-scope': 'off'
   },
   settings: {
     react: {
       version: 'detect',
     },
   },
-};
+}
