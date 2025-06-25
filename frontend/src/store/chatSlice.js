@@ -143,7 +143,7 @@ const chatSlice = createSlice({
     },
     addChannelSync: (state, action) => {
       state.channels.push(action.payload);
-      state.currentChannelId = action.payload.id;
+      //state.currentChannelId = action.payload.id;
     },
     removeChannelSync: (state, action) => {
       state.channels = state.channels.filter(channel => channel.id !== action.payload);
@@ -222,8 +222,9 @@ const chatSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(addChannel.fulfilled, state => {
+      .addCase(addChannel.fulfilled, (state, action) => {
         state.loading = false;
+        state.currentChannelId = action.payload.id;
         state.errorDisplayed = false;
       })
       .addCase(addChannel.rejected, (state, action) => {
