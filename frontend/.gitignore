@@ -11,3 +11,4 @@ npm-debug.log*
 .env.rollbar
 .DS_Store
 command.txt
+.env
