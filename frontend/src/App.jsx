@@ -42,17 +42,19 @@ function App() {
   return (
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
-        <Header />
-        <Routes>
-          <Route
-            path="/"
-            element={<ProtectedRoute><Home /></ProtectedRoute>}
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <ToastContainer />
+        <div className="container d-flex flex-column min-vh-100" data-bs-theme="white">
+          <Header />
+          <Routes>
+            <Route
+              path="/"
+              element={<ProtectedRoute><Home /></ProtectedRoute>}
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <ToastContainer />
+        </div>
       </ErrorBoundary>
     </Provider>
   )

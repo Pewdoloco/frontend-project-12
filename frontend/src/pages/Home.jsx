@@ -80,29 +80,29 @@ function Home() {
   )
 
   return (
-    <Container fluid className="chat-container">
+      <Container fluid className="d-flex flex-column min-vh-100 pb-5 overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
       {loading && <div>{t('common.loading')}</div>}
-      <div className="chat-content">
-        <Col className="channel-list">
-          <div className="channel-header">
+      <div className="flex-grow-1 d-flex h-100">
+        <Col className="h-100 overflow-auto pe-2 flex-shrink-0" style={{ minWidth: '200px' }}>
+          <div className="d-flex justify-content-between align-items-center mb-2">
             <h3>{t('home.channels')}</h3>
             <Button variant="primary" size="sm" onClick={() => setShowAddModal(true)}>
               {t('home.addChannel')}
             </Button>
           </div>
-          <ListGroup className="mt-2">
+          <ListGroup className="mt-2 bg-white">
             {channels.map(channel => (
               <ListGroup.Item
                 key={channel.id}
                 as="div"
                 active={channel.id === currentChannelId}
-                className="d-flex justify-content-between align-items-center"
+                className="d-flex justify-content-between align-items-center list-group-item-action"
                 style={{ cursor: 'pointer' }}
               >
                 <button
                   type="button"
                   role="button"
-                  className="btn btn-link text-start w-100"
+                  className="btn btn-link w-100 text-start text-decoration-none text-body"
                   onClick={() => handleChannelSelect(channel.id)}
                 >
                   #
@@ -122,12 +122,14 @@ function Home() {
                       <Dropdown.Item
                         onClick={() => setShowRenameModal(channel.id)}
                         disabled={loading}
+                        className="text-body"
                       >
                         {t('modals.rename')}
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => setShowRemoveModal(channel.id)}
                         disabled={loading}
+                        className="text-body"
                       >
                         {t('modals.remove')}
                       </Dropdown.Item>
@@ -138,20 +140,20 @@ function Home() {
             ))}
           </ListGroup>
         </Col>
-        <Col className="chat-area">
+        <Col className="d-flex flex-column h-100 overflow-hidden flex-grow-1" style={{ minWidth: '400px' }}>
           <h3>{t('home.chat')}</h3>
-          <div className="messages">
+          <div className="flex-grow-1 overflow-auto p-2 border border-secondary rounded mb-2" style={{ wordBreak: 'break-word' }}>
             {filteredMessages.map(message => (
-              <div key={message.id} className="message">
+              <div key={message.id} className="mb-2">
                 <strong>
                   {message.username}
                   :
                 </strong>
-                <span style={{ wordBreak: 'break-word' }}>{message.body}</span>
+                <span className="text-start" style={{ wordBreak: 'break-word' }}>{message.body}</span>
               </div>
             ))}
           </div>
-          <Form className="message-form" onSubmit={handleSubmit}>
+          <Form className="d-flex gap-2" onSubmit={handleSubmit}>
             <Form.Group className="flex-grow-1">
               <Form.Control
                 type="text"
@@ -161,6 +163,7 @@ function Home() {
                 disabled={!currentChannelId || networkStatus !== 'connected'}
                 aria-label="Новое сообщение"
                 ref={messageInputRef}
+                className="bg-white"
               />
             </Form.Group>
             <Button

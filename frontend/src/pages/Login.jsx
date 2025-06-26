@@ -30,8 +30,8 @@ function Login() {
   const [error, setError] = useState(null)
 
   return (
-    <div className="login-container">
-      <h1>{t('login.title')}</h1>
+    <div className="container-sm mx-auto p-3" style={{ maxWidth: '400px' }}>
+      <h1 className="display-4">{t('login.title')}</h1>
       {error === 'login' && (<Alert variant="danger">{t('login.invalidCredentials')}</Alert>)}
       <Formik
         initialValues={{ username: '', password: '' }}
@@ -61,7 +61,7 @@ function Login() {
         }}
       >
         {({ isSubmitting }) => (
-          <Form className="login-form">
+          <Form className="d-flex flex-column gap-4">
             <TextInput
               name="username"
               type="text"
@@ -80,13 +80,13 @@ function Login() {
               type="submit"
               variant="primary"
               disabled={isSubmitting}
-              className="w-100"
+              className="w-100 fw-medium rounded"
             >
               {t('login.login')}
             </Button>
             <div className="text-center mt-3">
               {t('login.noAccount')}
-              <Link to="/signup">
+              <Link to="/signup" className="text-decoration-none fw-medium">
                 {t('login.signup')}
               </Link>
             </div>

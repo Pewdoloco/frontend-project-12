@@ -51,8 +51,8 @@ function Signup() {
   })
 
   return (
-    <div className="signup-container">
-      <h1>{t('signup.title')}</h1>
+    <div className="container-sm mx-auto p-3" style={{ maxWidth: '400px' }}>
+      <h1 className="display-4">{t('signup.title')}</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <Formik
         initialValues={{ username: '', password: '', confirmPassword: '' }}
@@ -83,7 +83,7 @@ function Signup() {
         }}
       >
         {({ isSubmitting }) => (
-          <Form className="signup-form">
+          <Form className="d-flex flex-column gap-4">
             <TextInput
               label="signup.username"
               name="username"
@@ -109,13 +109,15 @@ function Signup() {
               type="submit"
               variant="primary"
               disabled={isSubmitting}
-              className="w-100"
+              className="w-100 fw-medium rounded"
             >
               {t('signup.signup')}
             </Button>
             <div className="text-center mt-3">
               {t('signup.haveAccount')}
-              <Link to="/login">{t('signup.login')}</Link>
+              <Link to="/login" className="text-decoration-none fw-medium">
+                {t('signup.login')}
+              </Link>
             </div>
           </Form>
         )}
