@@ -6,7 +6,8 @@ const registerAdminCI = async () => {
       username: 'admin',
       password: 'admin',
     })
-  } catch (error) {
+  }
+  catch (error) {
     if (error.response?.status !== 409) {
       throw new Error('Failed to register admin')
     }
