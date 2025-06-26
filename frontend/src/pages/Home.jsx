@@ -28,9 +28,9 @@ LeoProfanity.add(profanityWords)
 function Home() {
   const dispatch = useDispatch()
   const { channels, currentChannelId, loading, networkStatus } = useSelector(
-    (state) => state.chat,
+    state => state.chat,
   )
-  const messages = useSelector((state) => state.messages.list)
+  const messages = useSelector(state => state.messages.list)
   const { t } = useTranslation()
   const [messageInput, setMessageInput] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
@@ -76,11 +76,11 @@ function Home() {
   }
 
   const filteredMessages = messages.filter(
-    (message) => message.channelId === currentChannelId,
+    message => message.channelId === currentChannelId,
   )
 
   return (
-      <Container fluid className="d-flex flex-column min-vh-100 pb-5 overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
+    <Container fluid className="d-flex flex-column min-vh-100 pb-5 overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
       {loading && <div>{t('common.loading')}</div>}
       <div className="flex-grow-1 d-flex h-100">
         <Col className="h-100 overflow-auto pe-2 flex-shrink-0" style={{ minWidth: '200px' }}>

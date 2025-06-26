@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit'
 import chatReducer, {
   fetchChannels,
   initWebSocket,
@@ -10,19 +10,19 @@ import chatReducer, {
   addChannelSync,
   removeChannelSync,
   renameChannelSync,
-} from './chatSlice';
+} from './chatSlice'
 import messagesReducer, {
   fetchMessages,
   sendMessage,
   addMessage,
-} from './messagesSlice';
+} from './messagesSlice'
 
 export const store = configureStore({
   reducer: {
     chat: chatReducer,
     messages: messagesReducer,
   },
-});
+})
 
 export {
   fetchChannels,
