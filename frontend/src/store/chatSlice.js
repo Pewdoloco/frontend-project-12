@@ -14,7 +14,8 @@ export const fetchChannels = createAsyncThunk(
         headers: { Authorization: `Bearer ${token}` },
       })
       return response.data
-    } catch (err) {
+    }
+    catch (err) {
       if (err.response?.status === 401) {
         window.location.href = '/login'
       }

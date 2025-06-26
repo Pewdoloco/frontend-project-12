@@ -19,11 +19,11 @@ export const fetchMessages = createAsyncThunk(
       }
       const errorMessage = err.response?.status === 401
         ? i18n.t('common.unauthorized')
-        : err.response?.data?.message || i18n.t('toast.fetchMessagesFailed');
+        : err.response?.data?.message || i18n.t('toast.fetchMessagesFailed')
       return rejectWithValue(errorMessage)
     }
   },
-);
+)
 
 export const sendMessage = createAsyncThunk(
   'messages/sendMessage',
@@ -34,7 +34,7 @@ export const sendMessage = createAsyncThunk(
         '/api/v1/messages',
         { body, channelId, username },
         { headers: { Authorization: `Bearer ${token}` } },
-      );
+      )
     }
     catch (err) {
       if (err.response?.status === 401) {
@@ -46,7 +46,7 @@ export const sendMessage = createAsyncThunk(
       return rejectWithValue(errorMessage)
     }
   },
-);
+)
 
 const messagesSlice = createSlice({
   name: 'messages',
@@ -104,4 +104,3 @@ const messagesSlice = createSlice({
 
 export const { addMessage, resetErrorDisplayed } = messagesSlice.actions
 export default messagesSlice.reducer
-

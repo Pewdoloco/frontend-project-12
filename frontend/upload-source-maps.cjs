@@ -41,11 +41,12 @@ async function uploadSourceMap(filename) {
 
 try {
   const files = fs.readdirSync(sourceMapsDir)
-  const mapFiles = files.filter((file) => file.endsWith('.map'))
+  const mapFiles = files.filter(file => file.endsWith('.map'))
   if (mapFiles.length === 0) {
     process.exit(0)
   }
-  mapFiles.forEach((file) => uploadSourceMap(file));
-} catch {
+  mapFiles.forEach(file => uploadSourceMap(file))
+}
+catch {
   // Обработка ошибки
 }

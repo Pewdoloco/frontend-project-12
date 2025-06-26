@@ -38,4 +38,4 @@ export {
   addChannelSync,
   removeChannelSync,
   renameChannelSync,
-};
+}
