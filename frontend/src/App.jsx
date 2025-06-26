@@ -9,7 +9,7 @@ import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import NotFound from './pages/NotFound.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
-import registerAdminCI from './utils/registerAdminCI'
+//import registerAdminCI from './utils/registerAdminCI'
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
@@ -26,7 +26,7 @@ const rollbarConfig = {
   },
 }
 
-function App() {
+function App() {/*
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function App() {
   }, [])
 
   if (loading) return null
-
+*/
   return (
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
