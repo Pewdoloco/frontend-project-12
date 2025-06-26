@@ -204,7 +204,8 @@ export const initWebSocket = () => (dispatch) => {
 
   if (!socket.connected) {
     socket.connect()
-  } else {
+  }
+  else {
     dispatch(setNetworkStatus('connected'))
   }
 
