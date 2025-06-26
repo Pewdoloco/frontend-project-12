@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Provider, ErrorBoundary } from '@rollbar/react'
 import { ToastContainer } from 'react-toastify'
@@ -9,7 +8,6 @@ import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import NotFound from './pages/NotFound.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
-//import registerAdminCI from './utils/registerAdminCI'
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
@@ -26,19 +24,7 @@ const rollbarConfig = {
   },
 }
 
-function App() {/*
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const init = async () => {
-      await registerAdminCI()
-      setLoading(false)
-    }
-    init()
-  }, [])
-
-  if (loading) return null
-*/
+function App() {
   return (
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
