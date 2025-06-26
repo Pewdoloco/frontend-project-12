@@ -4,7 +4,6 @@ import * as Yup from 'yup'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap'
-import './Signup.css'
 import { useTranslation } from 'react-i18next'
 
 const TextInput = ({ label, ...props }) => {

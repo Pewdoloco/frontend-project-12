@@ -3,7 +3,6 @@ import { Formik, Form, useField } from 'formik'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { Alert, Button, Form as BootstrapForm } from 'react-bootstrap'
-import './Login.css'
 import { useTranslation } from 'react-i18next'
 
 const TextInput = ({ id, ...props }) => {

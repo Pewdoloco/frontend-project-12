@@ -1,7 +1,5 @@
 export default async function registerAdminCI() {
   const isCI = import.meta.env.VITE_CI === 'true'
-  console.log('[CI] mode:', isCI)
-
   if (!isCI) return
 
   try {
@@ -12,17 +10,16 @@ export default async function registerAdminCI() {
     })
 
     if (res.status === 409) {
-      console.log('[CI] admin already exists')
+      // admin уже существует
     }
     else if (!res.ok) {
-      const text = await res.text()
-      console.error('[CI] admin creation failed:', res.status, text)
+      // не получилось создать admin
     }
     else {
-      console.log('[CI] admin created successfully')
+      // admin cjplfy
     }
   }
-  catch (e) {
-    console.error('[CI] network error:', e.message)
+  catch {
+    // ошибка
   }
 }

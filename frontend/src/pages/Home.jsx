@@ -19,7 +19,6 @@ import {
 import AddChannelModal from '../components/AddChannelModal'
 import RemoveChannelModal from '../components/RemoveChannelModal'
 import RenameChannelModal from '../components/RenameChannelModal'
-import './Home.css'
 import { useTranslation } from 'react-i18next'
 import LeoProfanity from 'leo-profanity'
 import profanityWords from '../utils/profanityDictionary'
@@ -28,9 +27,10 @@ LeoProfanity.add(profanityWords)
 
 function Home() {
   const dispatch = useDispatch()
-  const { channels, messages, currentChannelId, loading, networkStatus } = useSelector(
-    state => state.chat,
+  const { channels, currentChannelId, loading, networkStatus } = useSelector(
+    (state) => state.chat,
   )
+  const messages = useSelector((state) => state.messages.list)
   const { t } = useTranslation()
   const [messageInput, setMessageInput] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
@@ -76,7 +76,7 @@ function Home() {
   }
 
   const filteredMessages = messages.filter(
-    message => message.channelId === currentChannelId,
+    (message) => message.channelId === currentChannelId,
   )
 
   return (
