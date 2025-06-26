@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import socket from '../utils/socket'
-import { toast } from 'react-toastify'
 import i18n from '../utils/i18n'
 import { addMessage } from './messagesSlice'
+import { handleThunkError, handleRejected } from '../utils/api'
 
 export const fetchChannels = createAsyncThunk(
   'chat/fetchChannels',
@@ -16,13 +16,7 @@ export const fetchChannels = createAsyncThunk(
       return response.data
     }
     catch (err) {
-      if (err.response?.status === 401) {
-        window.location.href = '/login'
-      }
-      const errorMessage = err.response?.status === 401
-        ? i18n.t('common.unauthorized')
-        : err.response?.data?.message || i18n.t('toast.fetchChannelsFailed')
-      return rejectWithValue(errorMessage)
+      return rejectWithValue(handleThunkError(err, 'toast.fetchChannelsFailed', i18n))
     }
   },
 )
@@ -40,13 +34,7 @@ export const addChannel = createAsyncThunk(
       return response.data
     }
     catch (err) {
-      if (err.response?.status === 401) {
-        window.location.href = '/login'
-      }
-      const errorMessage = err.response?.status === 401
-        ? i18n.t('common.unauthorized')
-        : err.response?.data?.message || i18n.t('toast.addChannelFailed')
-      return rejectWithValue(errorMessage)
+      return rejectWithValue(handleThunkError(err, 'toast.fetchChannelsFailed', i18n))
     }
   },
 )
@@ -62,13 +50,7 @@ export const removeChannel = createAsyncThunk(
       return id
     }
     catch (err) {
-      if (err.response?.status === 401) {
-        window.location.href = '/login'
-      }
-      const errorMessage = err.response?.status === 401
-        ? i18n.t('common.unauthorized')
-        : err.response?.data?.message || i18n.t('toast.removeChannelFailed')
-      return rejectWithValue(errorMessage)
+      return rejectWithValue(handleThunkError(err, 'toast.fetchChannelsFailed', i18n))
     }
   },
 )
@@ -86,13 +68,7 @@ export const renameChannel = createAsyncThunk(
       return response.data
     }
     catch (err) {
-      if (err.response?.status === 401) {
-        window.location.href = '/login'
-      }
-      const errorMessage = err.response?.status === 401
-        ? i18n.t('common.unauthorized')
-        : err.response?.data?.message || i18n.t('toast.renameChannelFailed')
-      return rejectWithValue(errorMessage)
+      return rejectWithValue(handleThunkError(err, 'toast.fetchChannelsFailed', i18n))
     }
   },
 )
@@ -148,12 +124,7 @@ const chatSlice = createSlice({
         state.errorDisplayed = false
       })
       .addCase(fetchChannels.rejected, (state, { payload }) => {
-        state.loading = false
-        state.error = payload
-        if (!state.errorDisplayed) {
-          toast.error(i18n.t('toast.error', { error: payload }), { toastId: 'data-fetch-error' })
-          state.errorDisplayed = true
-        }
+        handleRejected(state, payload, i18n, 'data-fetch-error')
       })
       .addCase(addChannel.pending, (state) => {
         state.loading = true
@@ -165,10 +136,7 @@ const chatSlice = createSlice({
         state.errorDisplayed = false
       })
       .addCase(addChannel.rejected, (state, { payload }) => {
-        state.loading = false
-        state.error = payload
-        toast.error(i18n.t('toast.error', { error: payload }))
-        state.errorDisplayed = false
+        handleRejected(state, payload, i18n)
       })
       .addCase(removeChannel.pending, (state) => {
         state.loading = true
@@ -179,10 +147,7 @@ const chatSlice = createSlice({
         state.errorDisplayed = false
       })
       .addCase(removeChannel.rejected, (state, { payload }) => {
-        state.loading = false
-        state.error = payload
-        toast.error(i18n.t('toast.error', { error: payload }))
-        state.errorDisplayed = false
+        handleRejected(state, payload, i18n)
       })
       .addCase(renameChannel.pending, (state) => {
         state.loading = true
@@ -193,10 +158,7 @@ const chatSlice = createSlice({
         state.errorDisplayed = false
       })
       .addCase(renameChannel.rejected, (state, { payload }) => {
-        state.loading = false
-        state.error = payload
-        toast.error(i18n.t('toast.error', { error: payload }))
-        state.errorDisplayed = false
+        handleRejected(state, payload, i18n)
       })
   },
 })
@@ -233,15 +195,16 @@ export const initWebSocket = () => (dispatch) => {
     const isLoggingOut = localStorage.getItem('isLoggingOut') === 'true'
     if (!isLoggingOut) {
       dispatch(setNetworkStatus('disconnected'))
-      toast.error(i18n.t('toast.networkError'), { toastId: 'network-error' })
+      import('react-toastify').then(({ toast }) => {
+        toast.error(i18n.t('toast.networkError'), { toastId: 'network-error' })
+      })
     }
     localStorage.removeItem('isLoggingOut')
   })
 
   if (!socket.connected) {
     socket.connect()
-  }
-  else {
+  } else {
     dispatch(setNetworkStatus('connected'))
   }
 

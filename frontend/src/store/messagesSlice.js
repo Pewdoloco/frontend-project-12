@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { toast } from 'react-toastify'
 import i18n from '../utils/i18n'
+import { handleThunkError, handleRejected } from '../utils/api'
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
@@ -14,13 +14,7 @@ export const fetchMessages = createAsyncThunk(
       return response.data
     }
     catch (err) {
-      if (err.response?.status === 401) {
-        window.location.href = '/login'
-      }
-      const errorMessage = err.response?.status === 401
-        ? i18n.t('common.unauthorized')
-        : err.response?.data?.message || i18n.t('toast.fetchMessagesFailed')
-      return rejectWithValue(errorMessage)
+      return rejectWithValue(handleThunkError(err, 'toast.fetchChannelsFailed', i18n))
     }
   },
 )
@@ -37,13 +31,7 @@ export const sendMessage = createAsyncThunk(
       )
     }
     catch (err) {
-      if (err.response?.status === 401) {
-        window.location.href = '/login'
-      }
-      const errorMessage = err.response?.status === 401
-        ? i18n.t('common.unauthorized')
-        : err.response?.data?.message || i18n.t('toast.sendMessageFailed')
-      return rejectWithValue(errorMessage)
+      return rejectWithValue(handleThunkError(err, 'toast.fetchChannelsFailed', i18n))
     }
   },
 )
@@ -76,12 +64,7 @@ const messagesSlice = createSlice({
         state.errorDisplayed = false
       })
       .addCase(fetchMessages.rejected, (state, { payload }) => {
-        state.loading = false
-        state.error = payload
-        if (!state.errorDisplayed) {
-          toast.error(i18n.t('toast.error', { error: payload }), { toastId: 'data-fetch-error' })
-          state.errorDisplayed = true
-        }
+        handleRejected(state, payload, i18n, 'data-fetch-error')
       })
       .addCase(sendMessage.pending, (state) => {
         state.loading = true
@@ -92,12 +75,7 @@ const messagesSlice = createSlice({
         state.errorDisplayed = false
       })
       .addCase(sendMessage.rejected, (state, { payload }) => {
-        state.loading = false
-        state.error = payload
-        if (!state.errorDisplayed) {
-          toast.error(i18n.t('toast.error', { error: payload }))
-          state.errorDisplayed = true
-        }
+        handleRejected(state, payload, i18n)
       })
   },
 })
