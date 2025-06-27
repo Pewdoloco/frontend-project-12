@@ -47,18 +47,18 @@ export default {
       title: 'Sign up',
       username: 'Username',
       // sonar-disable-next-line javascript:S2068
-      password: 'Password',// NOSONAR
+      password: 'Password', // NOSONAR
       // sonar-disable-next-line javascript:S2068
-      confirmPassword: 'Confirm password',// NOSONAR
+      confirmPassword: 'Confirm password', // NOSONAR
       signup: 'Register',
       haveAccount: 'Already have an account? ',
       login: 'Login',
       userExists: 'User already exists',
       registrationFailed: 'Registration failed. Try again.',
       // sonar-disable-next-line javascript:S2068
-      passwordMatch: 'Passwords must match',// NOSONAR
+      passwordMatch: 'Passwords must match', // NOSONAR
       // sonar-disable-next-line javascript:S2068
-      minPasswordLength: 'At least 6 characters',// NOSONAR
+      minPasswordLength: 'At least 6 characters', // NOSONAR
       nameLength: 'Between 3 and 20 characters',
       success: 'Registration successful',
     },

@@ -13,7 +13,7 @@ LeoProfanity.add(profanityWords)
 
 function ChannelModal({ show, onHide, mode, channelId, currentName, action, successMessage, errorMessage }) {
   const dispatch = useDispatch()
-  const { loading, channels } = useSelector((state) => state.chat)
+  const { loading, channels } = useSelector(state => state.chat)
   const { t } = useTranslation()
   const inputRef = useRef(null)
 
