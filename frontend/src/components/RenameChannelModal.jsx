@@ -54,6 +54,20 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
       }),
   })
 
+    const handleRenameChannel = async (values, { setSubmitting }) => {
+    const cleanedName = LeoProfanity.clean(values.name)
+    try {
+      await dispatch(renameChannel({ id: channelId, name: cleanedName })).unwrap()
+      toast.success(t('toast.channelRenamed'))
+      onHide()
+    }
+    catch {
+      toast.error(t('toast.renameChannelFailed'))
+    } finally {
+      setSubmitting(false)
+    }
+  }
+  
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -63,20 +77,7 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
         <Formik
           initialValues={{ name: currentName }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            const cleanedName = LeoProfanity.clean(values.name)
-            try {
-              await dispatch(renameChannel({ id: channelId, name: cleanedName })).unwrap()
-              toast.success(t('toast.channelRenamed'))
-              onHide()
-            }
-            catch {
-              toast.error(t('toast.renameChannelFailed'))
-            }
-            finally {
-              setSubmitting(false)
-            }
-          }}
+          onSubmit={handleRenameChannel}
         >
           {({ isSubmitting }) => (
             <Form>
@@ -88,10 +89,18 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
                 disabled={isSubmitting || loading}
               />
               <Modal.Footer>
-                <Button variant="secondary" onClick={onHide} disabled={isSubmitting || loading}>
+                <Button
+                  variant="secondary"
+                  onClick={onHide}
+                  disabled={isSubmitting || loading}
+                >
                   {t('modals.cancel')}
                 </Button>
-                <Button type="submit" variant="primary" disabled={isSubmitting || loading}>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isSubmitting || loading}
+                >
                   {t('modals.rename')}
                 </Button>
               </Modal.Footer>

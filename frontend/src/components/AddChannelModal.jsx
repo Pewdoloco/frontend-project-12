@@ -54,6 +54,22 @@ function AddChannelModal({ show, onHide }) {
       }),
   })
 
+  const handleAddChannel = async (values, { setSubmitting, resetForm }) => {
+    const cleanedName = LeoProfanity.clean(values.name)
+    try {
+      await dispatch(addChannel(cleanedName)).unwrap()
+      toast.success(t('toast.channelAdded'))
+      resetForm()
+      onHide()
+    }
+    catch {
+      toast.error(t('toast.addChannelFailed'))
+    }
+    finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -63,21 +79,7 @@ function AddChannelModal({ show, onHide }) {
         <Formik
           initialValues={{ name: '' }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting, resetForm }) => {
-            const cleanedName = LeoProfanity.clean(values.name)
-            try {
-              await dispatch(addChannel(cleanedName)).unwrap()
-              toast.success(t('toast.channelAdded'))
-              resetForm()
-              onHide()
-            }
-            catch {
-              toast.error(t('toast.addChannelFailed'))
-            }
-            finally {
-              setSubmitting(false)
-            }
-          }}
+          onSubmit={handleAddChannel}
         >
           {({ isSubmitting }) => (
             <Form>
@@ -88,26 +90,22 @@ function AddChannelModal({ show, onHide }) {
                 ref={inputRef}
                 disabled={isSubmitting || loading}
               />
-              {isSubmitting
-                ? <div>Loading...</div>
-                : (
-                    <Modal.Footer>
-                      <Button
-                        variant="secondary"
-                        onClick={onHide}
-                        disabled={isSubmitting || loading}
-                      >
-                        {t('modals.cancel')}
-                      </Button>
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        disabled={isSubmitting || loading}
-                      >
-                        {t('modals.add')}
-                      </Button>
-                    </Modal.Footer>
-                  )}
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  onClick={onHide}
+                  disabled={isSubmitting || loading}
+                >
+                  {t('modals.cancel')}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isSubmitting || loading}
+                >
+                  {t('modals.add')}
+                </Button>
+              </Modal.Footer>
             </Form>
           )}
         </Formik>

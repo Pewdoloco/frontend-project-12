@@ -10,6 +10,18 @@ function RemoveChannelModal({ show, onHide, channelId }) {
   const { t } = useTranslation()
   const state = useSelector(state => state.chat)
 
+  const handleRemoveChannel = async () => {
+    try {
+      const channelName = state.channels.find(c => c.id === channelId)?.name
+      await dispatch(removeChannel(channelId)).unwrap()
+      toast.success(t('toast.channelRemoved', { name: channelName }))
+      onHide()
+    }
+    catch {
+      // Ошибка обрабатывается в chatSlice через toast.error
+    }
+  }
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -22,21 +34,7 @@ function RemoveChannelModal({ show, onHide, channelId }) {
         <Button variant="secondary" onClick={onHide} disabled={loading}>
           {t('modals.cancel')}
         </Button>
-        <Button
-          variant="danger"
-          onClick={async () => {
-            try {
-              const channelName = state.channels.find(c => c.id === channelId)?.name
-              await dispatch(removeChannel(channelId)).unwrap()
-              toast.success(t('toast.channelRemoved', { name: channelName }))
-              onHide()
-            }
-            catch {
-              // Ошибка обрабатывается в chatSlice.js через toast.error
-            }
-          }}
-          disabled={loading}
-        >
+        <Button variant="danger" onClick={handleRemoveChannel} disabled={loading}>
           {t('modals.remove')}
         </Button>
       </Modal.Footer>

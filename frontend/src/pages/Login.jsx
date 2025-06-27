@@ -24,10 +24,25 @@ const TextInput = ({ id, ...props }) => {
   )
 }
 
+
 function Login() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const [error, setError] = useState(null)
+
+  const handleLogin = async (values, { setSubmitting }) => {
+    setError(null)
+    try {
+      const response = await axios.post('/api/v1/login', values)
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('username', response.data.username)
+      navigate('/')
+    }
+    catch {
+      setError('login')
+      setSubmitting(false)
+    }
+  }
 
   return (
     <div className="container-sm mx-auto p-3" style={{ maxWidth: '400px' }}>
@@ -45,20 +60,7 @@ function Login() {
           }
           return errors
         }}
-        onSubmit={async (values, { setSubmitting }) => {
-          setError(null)
-          try {
-            const response = await axios.post('/api/v1/login', values)
-            localStorage.setItem('token', response.data.token)
-            localStorage.setItem('username', response.data.username)
-            setError(null)
-            navigate('/')
-          }
-          catch {
-            setError('login')
-            setSubmitting(false)
-          }
-        }}
+        onSubmit={handleLogin}
       >
         {({ isSubmitting }) => (
           <Form className="d-flex flex-column gap-4">

@@ -50,6 +50,29 @@ function Signup() {
       .required('modals.required'),
   })
 
+  const handleSignup = async (values, { setSubmitting }) => {
+    setError(null)
+    try {
+      const response = await axios.post('/api/v1/signup', {
+        username: values.username,
+        password: values.password,
+      })
+      if (response.status === 201) {
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('username', response.data.username)
+        navigate('/')
+      }
+    }
+    catch (err) {
+      if (err.response?.status === 409) {
+        setError(t('signup.userExists'))
+      } else {
+        setError(t('signup.registrationFailed'))
+      }
+      setSubmitting(false)
+    }
+  }
+
   return (
     <div className="container-sm mx-auto p-3" style={{ maxWidth: '400px' }}>
       <h1 className="display-4">{t('signup.title')}</h1>
@@ -57,30 +80,7 @@ function Signup() {
       <Formik
         initialValues={{ username: '', password: '', confirmPassword: '' }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          setError(null)
-          try {
-            const response = await axios.post('/api/v1/signup', {
-              username: values.username,
-              password: values.password,
-            })
-            if (response.status === 201) {
-              localStorage.setItem('token', response.data.token)
-              localStorage.setItem('username', response.data.username)
-              setError(null)
-              navigate('/')
-            }
-          }
-          catch (err) {
-            if (err.response?.status === 409) {
-              setError(t('signup.userExists'))
-            }
-            else {
-              setError(t('signup.registrationFailed'))
-            }
-            setSubmitting(false)
-          }
-        }}
+        onSubmit={handleSignup}
       >
         {({ isSubmitting }) => (
           <Form className="d-flex flex-column gap-4">
