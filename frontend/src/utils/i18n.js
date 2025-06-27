@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next'
 import ru from './locales/ru.js'
 import en from './locales/en.js'
 
-export const resources = {
+const resources = {
   ru,
   en,
 }
