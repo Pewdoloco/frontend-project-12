@@ -24,7 +24,6 @@ const TextInput = ({ id, ...props }) => {
   )
 }
 
-
 function Login() {
   const navigate = useNavigate()
   const { t } = useTranslation()

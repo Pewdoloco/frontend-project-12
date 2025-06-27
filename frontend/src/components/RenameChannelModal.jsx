@@ -54,7 +54,7 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
       }),
   })
 
-    const handleRenameChannel = async (values, { setSubmitting }) => {
+  const handleRenameChannel = async (values, { setSubmitting }) => {
     const cleanedName = LeoProfanity.clean(values.name)
     try {
       await dispatch(renameChannel({ id: channelId, name: cleanedName })).unwrap()
@@ -63,11 +63,12 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
     }
     catch {
       toast.error(t('toast.renameChannelFailed'))
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }
-  
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>

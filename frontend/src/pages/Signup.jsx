@@ -66,7 +66,8 @@ function Signup() {
     catch (err) {
       if (err.response?.status === 409) {
         setError(t('signup.userExists'))
-      } else {
+      }
+      else {
         setError(t('signup.registrationFailed'))
       }
       setSubmitting(false)
