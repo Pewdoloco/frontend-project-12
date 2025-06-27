@@ -1,35 +1,16 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Formik, Form, useField } from 'formik'
-import * as Yup from 'yup'
-import { Modal, Button, Form as BootstrapForm } from 'react-bootstrap'
+import { Formik, Form } from 'formik'
+import { Modal, Button, } from 'react-bootstrap'
 import { renameChannel } from '../store'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import LeoProfanity from 'leo-profanity'
 import profanityWords from '../utils/profanityDictionary'
+import { TextInput } from './TextInput'
+import { getChannelValidationSchema } from '../utils/validation'
 
 LeoProfanity.add(profanityWords)
-
-const TextInput = ({ label, ...props }) => {
-  const [field, meta] = useField(props)
-  const { t } = useTranslation()
-  return (
-    <BootstrapForm.Group>
-      <BootstrapForm.Label>{t(label)}</BootstrapForm.Label>
-      <BootstrapForm.Control {...field} {...props} isInvalid={meta.touched && meta.error} aria-label={t('modals.channelName')} />
-      {
-        meta.touched && meta.error
-          ? (
-              <div className="text-danger mt-1">
-                {meta.error === 'Required' ? t('modals.required') : t(meta.error)}
-              </div>
-            )
-          : null
-      }
-    </BootstrapForm.Group>
-  )
-}
 
 function RenameChannelModal({ show, onHide, channelId, currentName }) {
   const dispatch = useDispatch()
@@ -44,15 +25,7 @@ function RenameChannelModal({ show, onHide, channelId, currentName }) {
     }
   }, [show])
 
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(3, 'modals.nameLength')
-      .max(20, 'modals.nameLength')
-      .required('modals.required')
-      .test('unique-name', 'modals.uniqueName', (value) => {
-        return !channels.some(channel => channel.name === value && channel.id !== channelId)
-      }),
-  })
+  const validationSchema = getChannelValidationSchema(channels, channelId)
 
   const handleRenameChannel = async (values, { setSubmitting }) => {
     const cleanedName = LeoProfanity.clean(values.name)
