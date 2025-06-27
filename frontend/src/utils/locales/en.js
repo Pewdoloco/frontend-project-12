@@ -37,7 +37,7 @@ export default {
       title: 'Login',
       username: 'Username',
       // sonar-disable-next-line javascript:S2068
-      password: 'Password',
+      password: 'Password', // NOSONAR
       login: 'Login',
       noAccount: 'No account? ',
       signup: 'Sign up',
