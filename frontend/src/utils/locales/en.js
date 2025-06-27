@@ -46,7 +46,8 @@ export default {
     signup: {
       title: 'Sign up',
       username: 'Username',
-      password: 'Password',
+      // sonar-disable-next-line javascript:S2068
+      password: 'Password',// NOSONAR
       confirmPassword: 'Confirm password',
       signup: 'Register',
       haveAccount: 'Already have an account? ',
