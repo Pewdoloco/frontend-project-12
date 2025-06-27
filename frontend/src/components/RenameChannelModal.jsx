@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
-import { Modal, Button, } from 'react-bootstrap'
+import { Modal, Button } from 'react-bootstrap'
 import { renameChannel } from '../store'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'

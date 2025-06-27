@@ -1,4 +1,4 @@
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 export const getChannelValidationSchema = (channels, channelId = null) => {
   return Yup.object({
@@ -8,8 +8,8 @@ export const getChannelValidationSchema = (channels, channelId = null) => {
       .required('modals.required')
       .test('unique-name', 'modals.uniqueName', (value) => {
         return channelId
-          ? !channels.some((channel) => channel.name === value && channel.id !== channelId)
-          : !channels.some((channel) => channel.name === value);
+          ? !channels.some(channel => channel.name === value && channel.id !== channelId)
+          : !channels.some(channel => channel.name === value)
       }),
-  });
-};
+  })
+}
