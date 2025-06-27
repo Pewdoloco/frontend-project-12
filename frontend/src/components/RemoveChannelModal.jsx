@@ -18,7 +18,7 @@ function RemoveChannelModal({ show, onHide, channelId }) {
       onHide()
     }
     catch {
-      // Ошибка обрабатывается в chatSlice через toast.error
+      // Обработка ошибки
     }
   }
 
